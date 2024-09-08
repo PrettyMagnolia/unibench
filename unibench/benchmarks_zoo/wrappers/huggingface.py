@@ -8,7 +8,7 @@ from datasets import load_dataset, load_from_disk
 from huggingface_hub import hf_hub_download
 import torch
 from torch.utils.data import Dataset
-from ...common_utils import DATA_DIR
+from ...common_utils import DATA_DIR, DS_CACHE_DIR
 from pathlib import Path
 
 
@@ -20,6 +20,7 @@ class HuggingFaceDataset(Dataset):
             repo_type="dataset",
             local_dir=dir,
             local_dir_use_symlinks=False,
+            cache_dir=DS_CACHE_DIR
         )
 
         res = []
@@ -76,7 +77,7 @@ class HuggingFaceDataset(Dataset):
                 self.templates = self.load_txt_file(
                     dataset_url,
                     "zeroshot_classification_templates.txt",
-                    str(self.dataset_dir),
+                    str(self.dataset_dir)
                 )
         except:
             pass
@@ -91,12 +92,14 @@ class HuggingFaceDataset(Dataset):
                 trust_remote_code=True,
                 split="test",
                 num_proc=self.download_num_workers,
+                cache_dir=DS_CACHE_DIR
             )
         except:
             self.dataset = load_dataset(
                 self.dataset_url,
                 trust_remote_code=True,
                 split="test",
+                cache_dir=DS_CACHE_DIR
             )
 
         self.dataset.save_to_disk(str(self.dataset_dir))
