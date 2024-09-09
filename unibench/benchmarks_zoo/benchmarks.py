@@ -23,7 +23,7 @@ from .wrappers import *
 )
 def cifar10(benchmark_name, transform=None, **kwargs):
     benchmark = HuggingFaceDataset(
-        transform=transform, dataset_url="haideraltahan/wds_cifar10", **kwargs
+        transform=transform, dataset_url="clip-benchmark/wds_vtab-cifar10", **kwargs
     )
     return ZeroShotBenchmarkHandler(
         benchmark_name=benchmark_name,
@@ -48,7 +48,7 @@ def cifar10(benchmark_name, transform=None, **kwargs):
 )
 def imagenet1k(benchmark_name, transform=None, **kwargs):
     benchmark = HuggingFaceDataset(
-        transform=transform, dataset_url="haideraltahan/wds_imagenet1k", **kwargs
+        transform=transform, dataset_url="clip-benchmark/wds_imagenet1k", **kwargs
     )
     return ZeroShotBenchmarkHandler(
         benchmark_name=benchmark_name,
@@ -73,7 +73,7 @@ def imagenet1k(benchmark_name, transform=None, **kwargs):
 )
 def cifar100(benchmark_name, transform=None, **kwargs):
     benchmark = HuggingFaceDataset(
-        transform=transform, dataset_url="haideraltahan/wds_cifar100", **kwargs
+        transform=transform, dataset_url="clip-benchmark/wds_vtab-cifar100", **kwargs
     )
     return ZeroShotBenchmarkHandler(
         benchmark_name=benchmark_name,
@@ -123,7 +123,7 @@ def food101(benchmark_name, transform=None, **kwargs):
 )
 def cars(benchmark_name, transform=None, **kwargs):
     benchmark = HuggingFaceDataset(
-        transform=transform, dataset_url="haideraltahan/wds_cars", **kwargs
+        transform=transform, dataset_url="clip-benchmark/wds_cars", **kwargs
     )
     return ZeroShotBenchmarkHandler(
         benchmark_name=benchmark_name,
@@ -148,7 +148,7 @@ def cars(benchmark_name, transform=None, **kwargs):
 )
 def fgvc_aircraft(benchmark_name, transform=None, **kwargs):
     benchmark = HuggingFaceDataset(
-        transform=transform, dataset_url="haideraltahan/wds_fgvc_aircraft", **kwargs
+        transform=transform, dataset_url="clip-benchmark/wds_fgvc_aircraft", **kwargs
     )
     return ZeroShotBenchmarkHandler(
         benchmark_name=benchmark_name,
@@ -173,7 +173,7 @@ def fgvc_aircraft(benchmark_name, transform=None, **kwargs):
 )
 def pets(benchmark_name, transform=None, **kwargs):
     benchmark = HuggingFaceDataset(
-        transform=transform, dataset_url="haideraltahan/wds_pets", **kwargs
+        transform=transform, dataset_url="clip-benchmark/wds_vtab-pets", **kwargs
     )
     return ZeroShotBenchmarkHandler(
         benchmark_name=benchmark_name,
@@ -198,7 +198,7 @@ def pets(benchmark_name, transform=None, **kwargs):
 )
 def dtd(benchmark_name, transform=None, **kwargs):
     benchmark = HuggingFaceDataset(
-        transform=transform, dataset_url="haideraltahan/wds_dtd", **kwargs
+        transform=transform, dataset_url="clip-benchmark/wds_vtab-dtd", **kwargs
     )
     return ZeroShotBenchmarkHandler(
         benchmark_name=benchmark_name,
@@ -223,7 +223,7 @@ def dtd(benchmark_name, transform=None, **kwargs):
 )
 def sun397(benchmark_name, transform=None, **kwargs):
     benchmark = HuggingFaceDataset(
-        transform=transform, dataset_url="haideraltahan/wds_sun397", **kwargs
+        transform=transform, dataset_url="clip-benchmark/wds_sun397", **kwargs
     )
     return ZeroShotBenchmarkHandler(
         benchmark_name=benchmark_name,
@@ -248,7 +248,7 @@ def sun397(benchmark_name, transform=None, **kwargs):
 )
 def caltech101(benchmark_name, transform=None, **kwargs):
     benchmark = HuggingFaceDataset(
-        transform=transform, dataset_url="haideraltahan/wds_caltech101", **kwargs
+        transform=transform, dataset_url="clip-benchmark/wds_vtab-caltech101", **kwargs
     )
     return ZeroShotBenchmarkHandler(
         benchmark_name=benchmark_name,
@@ -273,7 +273,7 @@ def caltech101(benchmark_name, transform=None, **kwargs):
 )
 def mnist(benchmark_name, transform=None, **kwargs):
     benchmark = HuggingFaceDataset(
-        transform=transform, dataset_url="haideraltahan/wds_mnist", **kwargs
+        transform=transform, dataset_url="clip-benchmark/wds_mnist", **kwargs
     )
     return ZeroShotBenchmarkHandler(
         benchmark_name=benchmark_name,
@@ -703,7 +703,7 @@ def stl10(benchmark_name, transform=None, **kwargs):
 )
 def svhn(benchmark_name, transform=None, **kwargs):
     benchmark = HuggingFaceDataset(
-        transform=transform, dataset_url="haideraltahan/wds_svhn", **kwargs
+        transform=transform, dataset_url="clip-benchmark/wds_vtab-svhn", **kwargs
     )
     return ZeroShotBenchmarkHandler(
         benchmark_name=benchmark_name,
@@ -728,7 +728,7 @@ def svhn(benchmark_name, transform=None, **kwargs):
 )
 def eurosat(benchmark_name, transform=None, **kwargs):
     benchmark = HuggingFaceDataset(
-        transform=transform, dataset_url="haideraltahan/wds_eurosat", **kwargs
+        transform=transform, dataset_url="clip-benchmark/wds_vtab-eurosat", **kwargs
     )
     return ZeroShotBenchmarkHandler(
         benchmark_name=benchmark_name,
@@ -753,7 +753,7 @@ def eurosat(benchmark_name, transform=None, **kwargs):
 )
 def country211(benchmark_name, transform=None, **kwargs):
     benchmark = HuggingFaceDataset(
-        transform=transform, dataset_url="haideraltahan/wds_country211", **kwargs
+        transform=transform, dataset_url="clip-benchmark/wds_country211", **kwargs
     )
     return ZeroShotBenchmarkHandler(
         benchmark_name=benchmark_name,
@@ -803,7 +803,7 @@ def imagenet_sketch(benchmark_name, transform=None, **kwargs):
 # )
 # def fer2013(benchmark_name, transform=None, **kwargs):
 #     benchmark = HuggingFaceDataset(
-#         transform=transform, dataset_url="haideraltahan/wds_fer2013", **kwargs
+#         transform=transform, dataset_url="clip-benchmark/wds_fer2013", **kwargs
 #     )
 #     return ZeroShotDatasetHandler(
 #         benchmark_name=benchmark_name,
@@ -828,7 +828,7 @@ def imagenet_sketch(benchmark_name, transform=None, **kwargs):
 )
 def dmlab(benchmark_name, transform=None, **kwargs):
     benchmark = HuggingFaceDataset(
-        transform=transform, dataset_url="haideraltahan/wds_dmlab", **kwargs
+        transform=transform, dataset_url="clip-benchmark/wds_vtab-dmlab", **kwargs
     )
     return ZeroShotBenchmarkHandler(
         benchmark_name=benchmark_name,
@@ -853,7 +853,7 @@ def dmlab(benchmark_name, transform=None, **kwargs):
 )
 def imageneta(benchmark_name, transform=None, **kwargs):
     benchmark = HuggingFaceDataset(
-        transform=transform, dataset_url="haideraltahan/wds_imageneta", **kwargs
+        transform=transform, dataset_url="clip-benchmark/wds_imagenet-a", **kwargs
     )
     return ZeroShotBenchmarkHandler(
         benchmark_name=benchmark_name,
@@ -903,7 +903,7 @@ def imageneto(benchmark_name, transform=None, **kwargs):
 )
 def imagenetr(benchmark_name, transform=None, **kwargs):
     benchmark = HuggingFaceDataset(
-        transform=transform, dataset_url="haideraltahan/wds_imagenetr", **kwargs
+        transform=transform, dataset_url="clip-benchmark/wds_imagenet-r", **kwargs
     )
     return ZeroShotBenchmarkHandler(
         benchmark_name=benchmark_name,
@@ -928,7 +928,7 @@ def imagenetr(benchmark_name, transform=None, **kwargs):
 )
 def pcam(benchmark_name, transform=None, **kwargs):
     benchmark = HuggingFaceDataset(
-        transform=transform, dataset_url="haideraltahan/wds_pcam", **kwargs
+        transform=transform, dataset_url="clip-benchmark/wds_vtab-pcam", **kwargs
     )
     return ZeroShotBenchmarkHandler(
         benchmark_name=benchmark_name,
@@ -1053,7 +1053,7 @@ def flowers102(benchmark_name, transform=None, **kwargs):
 )
 def imagenetv2(benchmark_name, transform=None, **kwargs):
     benchmark = HuggingFaceDataset(
-        transform=transform, dataset_url="haideraltahan/wds_imagenetv2", **kwargs
+        transform=transform, dataset_url="clip-benchmark/wds_imagenetv2", **kwargs
     )
     return ZeroShotBenchmarkHandler(
         benchmark_name=benchmark_name,
@@ -1078,7 +1078,7 @@ def imagenetv2(benchmark_name, transform=None, **kwargs):
 )
 def objectnet(benchmark_name, transform=None, **kwargs):
     benchmark = HuggingFaceDataset(
-        transform=transform, dataset_url="haideraltahan/wds_objectnet", **kwargs
+        transform=transform, dataset_url="clip-benchmark/wds_objectnet", **kwargs
     )
     return ZeroShotBenchmarkHandler(
         benchmark_name=benchmark_name,
@@ -1154,7 +1154,7 @@ def places365(benchmark_name, transform=None, **kwargs):
 def clevr_distance(benchmark_name, transform=None, **kwargs):
     benchmark = HuggingFaceDataset(
         transform=transform,
-        dataset_url="haideraltahan/wds_clevr_closest_object_distance",
+        dataset_url="clip-benchmark/wds_vtab-clevr_closest_object_distance",
         **kwargs
     )
     return ZeroShotBenchmarkHandler(
@@ -1180,7 +1180,7 @@ def clevr_distance(benchmark_name, transform=None, **kwargs):
 )
 def clevr_count(benchmark_name, transform=None, **kwargs):
     benchmark = HuggingFaceDataset(
-        transform=transform, dataset_url="haideraltahan/wds_clevr_count_all", **kwargs
+        transform=transform, dataset_url="clip-benchmark/wds_vtab-clevr_count_all", **kwargs
     )
     return ZeroShotBenchmarkHandler(
         benchmark_name=benchmark_name,
@@ -1253,7 +1253,7 @@ def inaturalist(benchmark_name, transform=None, **kwargs):
 )
 def voc2007(benchmark_name, transform=None, **kwargs):
     benchmark = HuggingFaceDataset(
-        transform=transform, dataset_url="haideraltahan/wds_voc2007", **kwargs
+        transform=transform, dataset_url="clip-benchmark/wds_voc2007", **kwargs
     )
     return ZeroShotBenchmarkHandler(
         benchmark_name=benchmark_name,
@@ -1278,7 +1278,7 @@ def voc2007(benchmark_name, transform=None, **kwargs):
 )
 def resisc45(benchmark_name, transform=None, **kwargs):
     benchmark = HuggingFaceDataset(
-        transform=transform, dataset_url="haideraltahan/wds_resisc45", **kwargs
+        transform=transform, dataset_url="clip-benchmark/wds_vtab-resisc45", **kwargs
     )
     return ZeroShotBenchmarkHandler(
         benchmark_name=benchmark_name,
@@ -1304,7 +1304,7 @@ def resisc45(benchmark_name, transform=None, **kwargs):
 def dspr_orientation(benchmark_name, transform=None, **kwargs):
     benchmark = HuggingFaceDataset(
         transform=transform,
-        dataset_url="haideraltahan/wds_dsprites_label_orientation",
+        dataset_url="clip-benchmark/wds_vtab-dsprites_label_orientation",
         **kwargs
     )
     return ZeroShotBenchmarkHandler(
@@ -1358,7 +1358,7 @@ def kitti_distance(benchmark_name, transform=None, **kwargs):
 def smallnorb_azimuth(benchmark_name, transform=None, **kwargs):
     benchmark = HuggingFaceDataset(
         transform=transform,
-        dataset_url="haideraltahan/wds_smallnorb_label_azimuth",
+        dataset_url="clip-benchmark/wds_vtab-smallnorb_label_azimuth",
         **kwargs
     )
     return ZeroShotBenchmarkHandler(
@@ -1385,7 +1385,7 @@ def smallnorb_azimuth(benchmark_name, transform=None, **kwargs):
 def smallnorb_elevation(benchmark_name, transform=None, **kwargs):
     benchmark = HuggingFaceDataset(
         transform=transform,
-        dataset_url="haideraltahan/wds_smallnorb_label_elevation",
+        dataset_url="clip-benchmark/wds_vtab-smallnorb_label_elevation",
         **kwargs
     )
     return ZeroShotBenchmarkHandler(
@@ -1412,7 +1412,7 @@ def smallnorb_elevation(benchmark_name, transform=None, **kwargs):
 def dspr_x_position(benchmark_name, transform=None, **kwargs):
     benchmark = HuggingFaceDataset(
         transform=transform,
-        dataset_url="haideraltahan/wds_dsprites_label_x_position",
+        dataset_url="clip-benchmark/wds_vtab-dsprites_label_x_position",
         **kwargs
     )
     return ZeroShotBenchmarkHandler(
@@ -1439,7 +1439,7 @@ def dspr_x_position(benchmark_name, transform=None, **kwargs):
 def dspr_y_position(benchmark_name, transform=None, **kwargs):
     benchmark = HuggingFaceDataset(
         transform=transform,
-        dataset_url="haideraltahan/wds_dsprites_label_y_position",
+        dataset_url="clip-benchmark/wds_vtab-dsprites_label_y_position",
         **kwargs
     )
     return ZeroShotBenchmarkHandler(
@@ -1466,7 +1466,7 @@ def dspr_y_position(benchmark_name, transform=None, **kwargs):
 def retinopathy(benchmark_name, transform=None, **kwargs):
     benchmark = HuggingFaceDataset(
         transform=transform,
-        dataset_url="haideraltahan/wds_diabetic_retinopathy",
+        dataset_url="clip-benchmark/wds_vtab-diabetic_retinopathy",
         **kwargs
     )
     return ZeroShotBenchmarkHandler(
@@ -1540,7 +1540,7 @@ def vg_relation(benchmark_name, transform=None, **kwargs):
 )
 def flickr30k_order(benchmark_name, transform=None, **kwargs):
     benchmark = HuggingFaceDataset(
-        transform=transform, dataset_url="haideraltahan/wds_flickr30k_order", **kwargs
+        transform=transform, dataset_url="clip-benchmark/wds_flickr30k", **kwargs
     )
     return RelationBenchmarkHandler(
         benchmark_name=benchmark_name,
