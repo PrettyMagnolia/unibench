@@ -110,7 +110,7 @@ class HuggingFaceDataset(Dataset):
         # Loading Images
         samples = []
         for k in item.keys():
-            if self.image_extension in k:
+            if self.image_extension in k or 'jpg' in k or 'jpeg' in k or 'png' in k:
                 img = item[k].convert("RGB")
                 if self.transform is not None:
                     img = self.transform(img)
