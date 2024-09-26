@@ -5,9 +5,8 @@ from functools import partial
 
 import clip
 import open_clip
-from unibench import Evaluator
-
 import alpha_clip
+from unibench import Evaluator
 from unibench.models_zoo.wrappers.clip import ClipModel, AlphaClipModel
 
 # names cannot contain '-
@@ -16,50 +15,50 @@ model_config = {
     'clip_vit_b_16': {
         'model_name': 'ViT-B-16',
         'tokenizer_name': 'ViT-B-16',
-        'model_path': '/data2/user_data/yifei/clip-models/clip/ViT-B-16.pt',
+        'model_path': '/mnt/user_data/yifei/unibench/models/clip/ViT-B-16.pt',
         'load_type': 'clip',
     },
     'clip_vit_l_14': {
         'model_name': 'ViT-L-14',
         'tokenizer_name': 'ViT-L-14',
-        'model_path': '/data2/user_data/yifei/clip-models/clip/ViT-L-14.pt',
+        'model_path': '/mnt/user_data/yifei/unibench/models/clip/ViT-L-14.pt',
         'load_type': 'clip',
     },
     'clip_vit_l_14_336': {
         'model_name': 'ViT-L-14-336',
         'tokenizer_name': 'ViT-L-14-336',
-        'model_path': '/data2/user_data/yifei/clip-models/clip/ViT-L-14-336px.pt',
+        'model_path': '/mnt/user_data/yifei/unibench/models/clip/ViT-L-14-336px.pt',
         'load_type': 'clip',
     },
     'open_clip-vit-b_16': {
         'model_name': 'ViT-B-16',
         'tokenizer_name': 'ViT-B-16',
-        'model_path': '/data2/user_data/yifei/clip-models/open-clip/CLIP-ViT-B-16-laion2B-s34B-b88K/open_clip_pytorch_model.bin',
+        'model_path': '/mnt/user_data/yifei/unibench/models/open-clip/CLIP-ViT-B-16-laion2B-s34B-b88K/open_clip_pytorch_model.bin',
         'load_type': 'open-clip',
     },
     'open_clip_vit_l_14': {
         'model_name': 'ViT-L-14',
         'tokenizer_name': 'ViT-L-14',
-        'model_path': '/data2/user_data/yifei/clip-models/open-clip/CLIP-ViT-L-14-laion2B-s32B-b82K/open_clip_pytorch_model.bin',
+        'model_path': '/mnt/user_data/yifei/unibench/models/open-clip/CLIP-ViT-L-14-laion2B-s32B-b82K/open_clip_pytorch_model.bin',
         'load_type': 'open-clip',
     },
     'alpha_clip_vit_b_16': {
-        'model_name': '/data2/user_data/yifei/clip-models/clip/ViT-B-16.pt',
+        'model_name': '/mnt/user_data/yifei/unibench/models/clip/ViT-B-16.pt',
         'tokenizer_name': 'ViT-B-16',
-        'model_path': '/data2/user_data/yifei/clip-models/alpha-clip/clip_b16_grit20m_fultune_2xe.pth',
+        'model_path': '/mnt/user_data/yifei/unibench/models/alpha-clip/clip_b16_grit20m_fultune_2xe.pth',
         'load_type': 'alpha-clip',
 
     },
     'alpha_clip_vit_l_14': {
-        'model_name': '/data2/user_data/yifei/clip-models/clip/ViT-L-14.pt',
+        'model_name': '/mnt/user_data/yifei/unibench/models/clip/ViT-L-14.pt',
         'tokenizer_name': 'ViT-L-14',
-        'model_path': '/data2/user_data/yifei/clip-models/alpha-clip/clip_l14_grit20m_fultune_2xe.pth',
+        'model_path': '/mnt/user_data/yifei/unibench/models/alpha-clip/clip_l14_grit20m_fultune_2xe.pth',
         'load_type': 'alpha-clip',
     },
     'alpha_clip_vit_l_14_336': {
-        'model_name': '/data2/user_data/yifei/clip-models/clip/ViT-L-14-336px.pt',
+        'model_name': '/mnt/user_data/yifei/unibench/models/clip/ViT-L-14-336px.pt',
         'tokenizer_name': 'ViT-L-14-336',
-        'model_path': '/data2/user_data/yifei/clip-models/alpha-clip/clip_l14_336_grit_20m_4xe.pth',
+        'model_path': '/mnt/user_data/yifei/unibench/models/alpha-clip/clip_l14_336_grit_20m_4xe.pth',
         'load_type': 'alpha-clip',
     },
 
@@ -106,29 +105,25 @@ def evaluate_models(names, benchmarks=None, eval_dir=None):
     if benchmarks:
         eval.update_benchmark_list(benchmarks)
 
-    res_file = '/data2/user_data/yifei/unibench/outputs' + '/' + names[0] + '/' + benchmarks[0] + '.f'
-    if os.path.exists(res_file):
-        print(f'Result file {res_file} already exists. Skipping evaluation.')
-        return
-
     # update models
     for name in names:
         eval.add_model(model=load_model(name))
     eval.update_model_list(names)
 
     eval.evaluate()
+    # eval.show_results()
 
 
 def main():
     names = [
-        # 'clip_vit_b_16',
-        # 'clip_vit_l_14',
-        # 'clip_vit_l_14_336',
+        'clip_vit_b_16',
+        'clip_vit_l_14',
+        'clip_vit_l_14_336',
+        'alpha_clip_vit_b_16',
+        'alpha_clip_vit_l_14',
+        'alpha_clip_vit_l_14_336',
         # 'open_clip-vit-b_16',
         # 'open_clip_vit_l_14',
-        # 'alpha_clip_vit_b_16',
-        # 'alpha_clip_vit_l_14',
-        'alpha_clip_vit_l_14_336',
     ]
 
     benchmark_list = [
@@ -145,26 +140,31 @@ def main():
         'dtd',
         'fer2013',
         'imagenete',
-        'objectnet',
         'imagenet9',
         'flickr30k_order',
         'sugarcrepe',
         'winoground',
-        'vg_attribution',
-        'vg_relation',
+        # 'vg_attribution',
+        # 'vg_relation',
         'coco_order',
-        'imagenet',
         'imagenetc',
     ]
-    # benchmark_list = [
-    #     'flickr30k_order',
-    # ]
+    benchmark_list = [
+        # 'vg_attribution', 'vg_relation'
+        'imagenet1k'
+    ]
     for benchmark in benchmark_list:
         if benchmark in not_support_benchmarks:
             print(f'{benchmark} benchmark is not supported')
             continue
-        print(f'Running benchmark: {benchmark}')
-        evaluate_models(names, benchmarks=[benchmark])
+        for name in names:
+            res_file = '/mnt/user_data/yifei/unibench/outputs' + '/' + name + '/' + benchmark + '.f'
+            if os.path.exists(res_file):
+                print(f'Result file {res_file} already exists. Skipping evaluation.')
+                # continue
+
+            print(f'Running benchmark: {benchmark}, model: {name}')
+            evaluate_models([name], benchmarks=[benchmark])
 
     # evaluate_models(names, benchmarks=benchmark_list)
 

@@ -15,7 +15,7 @@ PROJ_DIR = Path(__file__).parent.parent.absolute()
 CURRENT_DIR = Path(os.getcwd())
 HUB_CACHE_DIR = Path.home().joinpath(".cache").joinpath("torch").joinpath("hub")
 # CACHE_DIR = Path.home().joinpath(".cache").joinpath("unibench")
-CACHE_DIR = Path("/data2/user_data/yifei/unibench")
+CACHE_DIR = Path("/mnt/user_data/yifei/unibench")
 
 DATA_DIR = CACHE_DIR.joinpath("data")
 OUTPUT_DIR = CACHE_DIR.joinpath("outputs")
