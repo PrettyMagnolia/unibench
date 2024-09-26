@@ -1516,10 +1516,17 @@ def dollar_street(benchmark_name, transform=None, **kwargs):
     },
 )
 def vg_relation(benchmark_name, transform=None, **kwargs):
-    benchmark = HuggingFaceDataset(
-        transform=transform, dataset_url="haideraltahan/wds_vg_relation", **kwargs
-    )
-    return RelationBenchmarkHandler(
+    # benchmark = HuggingFaceDataset(
+    #     transform=transform, dataset_url="haideraltahan/wds_vg_relation", **kwargs
+    # )
+    # return RelationBenchmarkHandler(
+    #     benchmark_name=benchmark_name,
+    #     benchmark=benchmark,
+    # )
+    img_file = r'/mnt/user_data/yifei/unibench/data/aro/images'
+    json_file = r'/mnt/user_data/yifei/unibench/data/aro/visual_genome_relation.json'
+    benchmark = VgDataset(image_dir=img_file, json_file=json_file, transform=transform)
+    return VgBenchmarkHandler(
         benchmark_name=benchmark_name,
         benchmark=benchmark,
     )
@@ -1608,10 +1615,17 @@ def winoground(benchmark_name, transform=None, **kwargs):
     },
 )
 def vg_attribution(benchmark_name, transform=None, **kwargs):
-    benchmark = HuggingFaceDataset(
-        transform=transform, dataset_url="haideraltahan/wds_vg_attribution", **kwargs
-    )
-    return RelationBenchmarkHandler(
+    # benchmark = HuggingFaceDataset(
+    #     transform=transform, dataset_url="haideraltahan/wds_vg_attribution", **kwargs
+    # )
+    # return RelationBenchmarkHandler(
+    #     benchmark_name=benchmark_name,
+    #     benchmark=benchmark,
+    # )
+    img_file = r'/mnt/user_data/yifei/unibench/data/aro/images'
+    json_file = r'/mnt/user_data/yifei/unibench/data/aro/visual_genome_attribution.json'
+    benchmark = VgDataset(image_dir=img_file, json_file=json_file, transform=transform)
+    return VgBenchmarkHandler(
         benchmark_name=benchmark_name,
         benchmark=benchmark,
     )

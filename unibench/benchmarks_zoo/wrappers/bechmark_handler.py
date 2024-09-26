@@ -30,7 +30,7 @@ class ZeroShotBenchmarkHandler(BenchmarkHandler):
         BenchmarkHandler.__init__(self, benchmark_name, benchmark)
         assert classes is not None, "Classes must be provided for zero shot benchmarks"
         assert (
-            templates is not None
+                templates is not None
         ), "Templates must be provided for zero shot benchmarks"
         self.classes = classes
         self.templates = templates
@@ -90,7 +90,7 @@ class ZeroShotBenchmarkHandler(BenchmarkHandler):
             _, pred = pred.topk(self.topx, 1, True, True)
             pred = pred.t()
             correct = pred.eq(targets.view(1, -1).expand_as(pred)).int().sum(0)
-            
+
             if len(self.classes) < 5:
                 top5 = targets
                 correct_top5 = [1] * len(targets)
@@ -118,7 +118,7 @@ class ZeroShotBenchmarkHandler(BenchmarkHandler):
             "predictions_top5": top5,
             "confidence": confidence,
         }
-        
+
         if len(batch) > 2:
             res["image_name"] = sample_id
 
@@ -195,5 +195,56 @@ class RelationBenchmarkHandler(BenchmarkHandler):
             if "\n" in attribute[0]:
                 attribute = [x.split("\n") for x in attribute]
             res["attribute"] = attribute
+
+        return res
+
+
+class VgBenchmarkHandler(BenchmarkHandler):
+    def __init__(self, benchmark_name, benchmark):
+        BenchmarkHandler.__init__(self, benchmark_name, benchmark)
+
+    def get_similarity(self, model, images, captions):
+        # 获取图像的嵌入表示
+        image_features = model.get_image_embeddings(images)
+
+        # 获取caption的嵌入表示
+        num_captions = len(captions)
+        batch_size = len(captions[0])
+
+        caption_features = (
+            model.get_text_embeddings(list(itertools.chain.from_iterable(captions)))
+            .reshape(num_captions, batch_size, -1)
+            .permute(1, 0, 2)
+        )
+
+        # 计算图像与caption的相似度
+        scores = torch.einsum("nkd,nld->nkl", image_features, caption_features)
+
+        if model.use_itm_head:
+            scores = model.use_mlp_head(
+                scores,
+                model.model.visual_encoder(images.to(model.device)).unsqueeze(1),
+                captions,
+            )
+
+        return scores
+
+    def eval_batch(self, model, batch):
+        images, correct_caption, incorrect_caption, sample_id = batch
+
+        captions = [correct_caption, incorrect_caption]
+
+        scores = self.get_similarity(model, images, captions)
+        preds = torch.argmax(scores.squeeze(), axis=-1)
+
+        correct = (preds == 0).int()  # 当第一个caption（正确的caption）的相似度最高时为1，否则为0
+
+        res = {
+            "image_name": sample_id,
+            "benchmark_name": self.benchmark_name,
+            "correctness": correct,
+            "confidence": scores.squeeze(1).max(1)[0],  # 最大相似度
+            "entropy": Categorical(probs=softmax(scores.squeeze(1), dim=-1)).entropy(),  # 计算熵
+        }
 
         return res

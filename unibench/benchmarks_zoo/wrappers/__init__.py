@@ -6,3 +6,4 @@ LICENSE file in the root directory of this source tree.
 """
 from .huggingface import HuggingFaceDataset
 from .bechmark_handler import *
+from .vg_dataset import *
