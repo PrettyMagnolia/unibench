@@ -4,7 +4,8 @@ All rights reserved.
 This source code is licensed under the license found in the
 LICENSE file in the root directory of this source tree.
 """
-
+import os
+import pickle
 from pathlib import Path
 import random
 from typing import Optional
@@ -12,6 +13,7 @@ import numpy as np
 import shutil
 from huggingface_hub import hf_hub_download, snapshot_download
 import torch
+from torchvision import transforms
 
 from ..benchmarks_zoo.registry import get_benchmark_info
 from ..benchmarks_zoo import benchmarks, list_benchmarks
@@ -22,12 +24,15 @@ import pandas as pd
 from rich.table import Table
 from rich import box
 
+from pycocotools import mask as maskUtils
+from scipy.ndimage import convolve
+
 
 def df_to_table(
-    pandas_dataframe: pd.DataFrame,
-    rich_table: Table,
-    show_index: bool = True,
-    index_name: Optional[str] = None,
+        pandas_dataframe: pd.DataFrame,
+        rich_table: Table,
+        show_index: bool = True,
+        index_name: Optional[str] = None,
 ) -> Table:
     """Convert a pandas.DataFrame obj into a rich.Table obj.
     Args:
@@ -98,6 +103,7 @@ def download_only_aggregate(output_dir):
         filename="aggregate.f",
     )
 
+
 def download_all_results(output_dir):
     print(f"Downloading all results...{output_dir}")
     snapshot_download(
@@ -107,3 +113,54 @@ def download_all_results(output_dir):
         local_dir_use_symlinks=False,
         repo_type="dataset",
     )
+
+
+def rle_to_mask(rle):
+    return maskUtils.decode(rle)
+
+
+def binary_mask_edges(binary_mask):
+    kernel = np.array([[1, 1, 1],
+                       [1, -8, 1],
+                       [1, 1, 1]])
+
+    edges = convolve(binary_mask.astype(np.float32), kernel)
+    edges = np.clip(edges, 0, 1)
+    return edges.astype(np.uint8)
+
+
+def load_mask(pkl_file_path, image_shape):
+    if os.path.exists(pkl_file_path):
+        with open(pkl_file_path, 'rb') as f:
+            masks = pickle.load(f)
+
+        shape = masks[0]['segmentation']['size']
+        combined_edges = np.zeros(shape, dtype=np.uint8)
+        sorted_masks = sorted(masks, key=lambda x: x['area'], reverse=True)
+
+        for mask_data in sorted_masks:
+            segmentation = mask_data['segmentation']
+            rle_counts = segmentation['counts']
+            binary_mask = rle_to_mask({'size': shape, 'counts': rle_counts})
+            # binary_mask = np.clip(binary_mask, 0, 1)
+            # edges = cv2.Canny(binary_mask.astype(np.uint8), 1, 1)
+            edges = binary_mask_edges(binary_mask)
+            combined_edges = np.maximum(combined_edges, edges)
+        return combined_edges
+    else:
+        return np.ones(image_shape[:2], dtype=np.uint8)
+
+
+def get_mask_transform(transform):
+    resize_size = None
+    for t in transform.transforms:
+        if isinstance(t, transforms.Resize):
+            resize_size = t.size
+
+    mask_transform = transforms.Compose([
+        transforms.ToTensor(),
+        transforms.Resize((resize_size, resize_size)) if resize_size else transforms.Resize((224, 224)),
+        transforms.Normalize(0.5, 0.26)
+    ])
+
+    return mask_transform

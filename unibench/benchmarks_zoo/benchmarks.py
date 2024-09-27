@@ -1515,7 +1515,7 @@ def dollar_street(benchmark_name, transform=None, **kwargs):
         "llama2_ppi": None,
     },
 )
-def vg_relation(benchmark_name, transform=None, **kwargs):
+def vg_relation(benchmark_name, transform=None, has_mask=False, **kwargs):
     # benchmark = HuggingFaceDataset(
     #     transform=transform, dataset_url="haideraltahan/wds_vg_relation", **kwargs
     # )
@@ -1525,10 +1525,12 @@ def vg_relation(benchmark_name, transform=None, **kwargs):
     # )
     img_file = r'/mnt/user_data/yifei/unibench/data/aro/images'
     json_file = r'/mnt/user_data/yifei/unibench/data/aro/visual_genome_relation.json'
-    benchmark = VgDataset(image_dir=img_file, json_file=json_file, transform=transform)
+    mask_file = r'/mnt/shared/data/SAM2_Dataset/aro/images/'
+    benchmark = VgDataset(image_dir=img_file, json_file=json_file, transform=transform, mask_dir=mask_file if has_mask else None)
     return VgBenchmarkHandler(
         benchmark_name=benchmark_name,
         benchmark=benchmark,
+        has_mask=has_mask
     )
 
 
@@ -1614,7 +1616,7 @@ def winoground(benchmark_name, transform=None, **kwargs):
         "llama2_ppi": None,
     },
 )
-def vg_attribution(benchmark_name, transform=None, **kwargs):
+def vg_attribution(benchmark_name, transform=None, has_mask=False, **kwargs):
     # benchmark = HuggingFaceDataset(
     #     transform=transform, dataset_url="haideraltahan/wds_vg_attribution", **kwargs
     # )
@@ -1624,10 +1626,12 @@ def vg_attribution(benchmark_name, transform=None, **kwargs):
     # )
     img_file = r'/mnt/user_data/yifei/unibench/data/aro/images'
     json_file = r'/mnt/user_data/yifei/unibench/data/aro/visual_genome_attribution.json'
-    benchmark = VgDataset(image_dir=img_file, json_file=json_file, transform=transform)
+    mask_file = r'/mnt/shared/data/SAM2_Dataset/aro/images/'
+    benchmark = VgDataset(image_dir=img_file, json_file=json_file, transform=transform, mask_dir=mask_file if has_mask else None)
     return VgBenchmarkHandler(
         benchmark_name=benchmark_name,
         benchmark=benchmark,
+        has_mask=has_mask
     )
 
 

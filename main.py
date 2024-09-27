@@ -98,8 +98,8 @@ def load_model(name):
     )
 
 
-def evaluate_models(names, benchmarks=None, eval_dir=None):
-    eval = Evaluator(benchmarks_dir=eval_dir) if eval_dir else Evaluator()
+def evaluate_models(names, benchmarks=None):
+    eval = Evaluator(has_mask=True)
 
     # update benchmarks
     if benchmarks:
@@ -116,12 +116,12 @@ def evaluate_models(names, benchmarks=None, eval_dir=None):
 
 def main():
     names = [
-        'clip_vit_b_16',
-        'clip_vit_l_14',
-        'clip_vit_l_14_336',
+        # 'clip_vit_b_16',
+        # 'clip_vit_l_14',
+        # 'clip_vit_l_14_336',
         'alpha_clip_vit_b_16',
-        'alpha_clip_vit_l_14',
-        'alpha_clip_vit_l_14_336',
+        # 'alpha_clip_vit_l_14',
+        # 'alpha_clip_vit_l_14_336',
         # 'open_clip-vit-b_16',
         # 'open_clip_vit_l_14',
     ]
@@ -150,8 +150,9 @@ def main():
         'imagenetc',
     ]
     benchmark_list = [
-        # 'vg_attribution', 'vg_relation'
-        'imagenet1k'
+        # 'vg_attribution',
+        'vg_relation',
+        # 'imagenet1k'
     ]
     for benchmark in benchmark_list:
         if benchmark in not_support_benchmarks:

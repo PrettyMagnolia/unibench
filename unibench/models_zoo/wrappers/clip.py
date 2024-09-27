@@ -92,11 +92,10 @@ class AlphaClipModel(AbstractModel):
         self.zeroshot_weights = torch.stack(zeroshot_weights).T
 
     @torch.no_grad()
-    def get_image_embeddings(self, images):
-        # mask = mask_transform(np.ones_like(mask) * 255)
-        # mask = mask_transform(np.ones((images.shape[-2], images.shape[-1])) * 255).to(self.device)
-        mask = mask_transform(np.zeros((images.shape[-2], images.shape[-1])) * 255).to(self.device)
-        image_features = self.model.encode_image(images.to(self.device), mask)
+    def get_image_embeddings(self, images, mask=None):
+        # mask = mask_transform(np.ones((images.shape[-2], images.shape[-1])) * 255)
+        # mask = mask_transform(np.zeros((images.shape[-2], images.shape[-1])) * 255)
+        image_features = self.model.encode_image(images.to(self.device), mask.to(self.device))
         image_features /= image_features.norm(dim=1, keepdim=True)
         return image_features.unsqueeze(1)
 

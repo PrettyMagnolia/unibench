@@ -99,6 +99,7 @@ class Evaluator(object):
         benchmarks_dir: str = DATA_DIR,
         download_aggregate_precomputed: bool = True,
         download_all_precomputed: bool = False,
+        has_mask: bool = False,
     ):
         self.seed = seed
         self.num_workers = num_workers
@@ -107,6 +108,7 @@ class Evaluator(object):
 
         self.update_model_list(models, model_id)
         self.update_benchmark_list(benchmarks, benchmark_id)
+        self.has_mask = has_mask
 
         seed_everything(self.seed)
         self.outputhandler = OutputHandler(
@@ -293,6 +295,7 @@ class Evaluator(object):
                         benchmark_name,
                         transform=model.get_preprocess_transforms(),
                         root=self.benchmarks_dir,
+                        has_mask=self.has_mask,
                     )
 
                     ds = dh.benchmark

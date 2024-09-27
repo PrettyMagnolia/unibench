@@ -200,12 +200,13 @@ class RelationBenchmarkHandler(BenchmarkHandler):
 
 
 class VgBenchmarkHandler(BenchmarkHandler):
-    def __init__(self, benchmark_name, benchmark):
+    def __init__(self, benchmark_name, benchmark, has_mask=False):
         BenchmarkHandler.__init__(self, benchmark_name, benchmark)
+        self.has_mask = has_mask
 
-    def get_similarity(self, model, images, captions):
+    def get_similarity(self, model, images, captions, mask=None):
         # 获取图像的嵌入表示
-        image_features = model.get_image_embeddings(images)
+        image_features = model.get_image_embeddings(images, mask=mask)
 
         # 获取caption的嵌入表示
         num_captions = len(captions)
@@ -230,11 +231,15 @@ class VgBenchmarkHandler(BenchmarkHandler):
         return scores
 
     def eval_batch(self, model, batch):
-        images, correct_caption, incorrect_caption, sample_id = batch
+        mask = None
+        if self.has_mask:
+            images, mask, correct_caption, incorrect_caption, sample_id = batch
+        else:
+            images, correct_caption, incorrect_caption, sample_id = batch
 
         captions = [correct_caption, incorrect_caption]
 
-        scores = self.get_similarity(model, images, captions)
+        scores = self.get_similarity(model, images, captions, mask=mask)
         preds = torch.argmax(scores.squeeze(), axis=-1)
 
         correct = (preds == 0).int()  # 当第一个caption（正确的caption）的相似度最高时为1，否则为0
