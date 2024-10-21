@@ -4,11 +4,13 @@ All rights reserved.
 This source code is licensed under the license found in the
 LICENSE file in the root directory of this source tree.
 """
+import numpy as np
+from PIL import Image
 from datasets import load_dataset, load_from_disk
 from huggingface_hub import hf_hub_download
 import torch
 from torch.utils.data import Dataset
-from ...common_utils import DATA_DIR, DS_CACHE_DIR
+from ...common_utils import DATA_DIR, DS_CACHE_DIR, MASK_DIR, load_DINO_mask, get_mask_transform
 from pathlib import Path
 
 
@@ -36,19 +38,19 @@ class HuggingFaceDataset(Dataset):
         return res
 
     def __init__(
-        self,
-        dataset_url,
-        root: str = DATA_DIR,
-        transform=None,
-        target_transform=None,
-        download_num_workers=60,
-        image_extension="webp",
-        classes=None,
-        templates=None,
-        *args,
-        **kwargs
+            self,
+            dataset_url,
+            root: str = DATA_DIR,
+            transform=None,
+            target_transform=None,
+            download_num_workers=60,
+            image_extension="webp",
+            classes=None,
+            templates=None,
+            *args,
+            **kwargs
     ):
-        Dataset.__init__(self, *args, **kwargs)
+        Dataset.__init__(self)
         assert dataset_url != "", "Please provide a dataset url"
 
         self.dataset_name = dataset_url.split("/")[-1]
@@ -67,6 +69,9 @@ class HuggingFaceDataset(Dataset):
             self.download_dataset()
 
         self.dataset = load_from_disk(str(self.dataset_dir))
+
+        self.mask_dir = MASK_DIR.joinpath(self.dataset_name)
+        self.mask_transform = get_mask_transform(transform)
 
         try:
             if classes is None:
@@ -112,6 +117,7 @@ class HuggingFaceDataset(Dataset):
         for k in item.keys():
             if self.image_extension in k or 'jpg' in k or 'jpeg' in k or 'png' in k:
                 img = item[k].convert("RGB")
+                copy_img = img
                 if self.transform is not None:
                     img = self.transform(img)
                 samples.append(img)
@@ -142,5 +148,15 @@ class HuggingFaceDataset(Dataset):
                 str(item["__key__"]),
                 item["split.txt"].decode("utf-8"),
             )
+        if not self.mask_dir.exists():
+            return samples, target, str(item["__key__"])
 
-        return samples, target, str(item["__key__"])
+        # get mask
+        edge_path = self.mask_dir.joinpath(f"{item['__key__']}_edges.pkl")
+        edge = load_DINO_mask(edge_path, (copy_img.height, copy_img.width, 3))
+        rgba = np.concatenate((copy_img, np.expand_dims(edge, axis=-1)), axis=-1)
+        mask = rgba[:, :, -1]
+
+        mask_torch = self.mask_transform(Image.fromarray(mask * 255))
+
+        return samples, target, str(item["__key__"]), mask_torch

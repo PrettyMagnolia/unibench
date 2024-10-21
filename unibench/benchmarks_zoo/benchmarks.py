@@ -281,7 +281,8 @@ def mnist(benchmark_name, transform=None, **kwargs):
         classes=benchmark.classes,
         templates=benchmark.templates,
     )
-    
+
+
 # @register_dataset(
 #     "mnist",
 #     {
@@ -305,8 +306,8 @@ def mnist(benchmark_name, transform=None, **kwargs):
 #         classes=benchmark.classes,
 #         templates=benchmark.templates,
 #         topx=2
-    # )
-    
+# )
+
 # @register_dataset(
 #     "mnist",
 #     {
@@ -331,7 +332,7 @@ def mnist(benchmark_name, transform=None, **kwargs):
 #         templates=benchmark.templates,
 #         topx=3
 #     )
-    
+
 # @register_dataset(
 #     "mnist",
 #     {
@@ -356,7 +357,7 @@ def mnist(benchmark_name, transform=None, **kwargs):
 #         templates=benchmark.templates,
 #         topx=4
 #     )
-    
+
 # @register_dataset(
 #     "mnist",
 #     {
@@ -406,7 +407,8 @@ def fashion_mnist(benchmark_name, transform=None, **kwargs):
         classes=benchmark.classes,
         templates=benchmark.templates,
     )
-    
+
+
 @register_benchmark(
     "transfer",
     {
@@ -1523,14 +1525,10 @@ def vg_relation(benchmark_name, transform=None, has_mask=False, **kwargs):
     #     benchmark_name=benchmark_name,
     #     benchmark=benchmark,
     # )
-    img_file = r'/mnt/user_data/yifei/unibench/data/aro/images'
-    json_file = r'/mnt/user_data/yifei/unibench/data/aro/visual_genome_relation.json'
-    mask_file = r'/mnt/shared/data/SAM2_Dataset/aro/images/'
-    benchmark = VgDataset(image_dir=img_file, json_file=json_file, transform=transform, mask_dir=mask_file if has_mask else None)
+    benchmark = VgDataset(task_type='vgr', transform=transform)
     return VgBenchmarkHandler(
         benchmark_name=benchmark_name,
         benchmark=benchmark,
-        has_mask=has_mask
     )
 
 
@@ -1624,14 +1622,14 @@ def vg_attribution(benchmark_name, transform=None, has_mask=False, **kwargs):
     #     benchmark_name=benchmark_name,
     #     benchmark=benchmark,
     # )
-    img_file = r'/mnt/user_data/yifei/unibench/data/aro/images'
-    json_file = r'/mnt/user_data/yifei/unibench/data/aro/visual_genome_attribution.json'
-    mask_file = r'/mnt/shared/data/SAM2_Dataset/aro/images/'
-    benchmark = VgDataset(image_dir=img_file, json_file=json_file, transform=transform, mask_dir=mask_file if has_mask else None)
+    img_file = r'/mnt/shared/unibench/data/raw/aro/images'
+    json_file = r'/mnt/shared/unibench/data/raw/aro/visual_genome_attribution.json'
+    mask_file = r'/mnt/shared/unibench/data/DINO/aro'
+    benchmark = VgDataset(image_dir=img_file, json_file=json_file, transform=transform,
+                          mask_dir=mask_file if has_mask else None)
     return VgBenchmarkHandler(
         benchmark_name=benchmark_name,
         benchmark=benchmark,
-        has_mask=has_mask
     )
 
 

@@ -1,19 +1,27 @@
 import os
 import json
+from pathlib import Path
 
 import numpy as np
 from torch.utils.data import Dataset
 from PIL import Image
-from unibench.common_utils.utils import load_mask, get_mask_transform
+from unibench.common_utils.utils import load_DINO_mask, get_mask_transform
+from ...common_utils import DATA_DIR, MASK_DIR
 
 
 class VgDataset(Dataset):
-    def __init__(self, image_dir, json_file, transform=None, mask_dir=None):
-        self.image_dir = image_dir
-        self.data = self.load_json(json_file)
+    def __init__(self, task_type, transform=None, mask_dir=None):
+        self.data_dir = Path(DATA_DIR).joinpath('aro').joinpath('images')
+        self.mask_dir = Path(MASK_DIR).joinpath('aro')
+        if task_type == 'vga':
+            self.json_file = Path(DATA_DIR).joinpath('aro').joinpath('visual_genome_attribution.json')
+        elif task_type == 'vgr':
+            self.json_file = Path(DATA_DIR).joinpath('aro').joinpath('visual_genome_relation.json')
+
+        self.json_data = self.load_json(self.json_file)
+
         self.transform = transform
         self.mask_transform = get_mask_transform(transform)
-        self.mask_dir = mask_dir
 
     def load_json(self, json_file):
         with open(json_file, 'r') as f:
@@ -21,30 +29,28 @@ class VgDataset(Dataset):
         return data
 
     def __len__(self):
-        return len(self.data)
+        return len(self.json_data)
 
     def __getitem__(self, idx):
-        item = self.data[idx]
+        item = self.json_data[idx]
 
         image_name = item["image_id"] + '.jpg'
         true_caption = item["true_caption"]
         false_caption = item["false_caption"]
 
-        image_path = os.path.join(self.image_dir, image_name)
+        image_path = self.data_dir.joinpath(image_name)
         image = Image.open(image_path).convert("RGB")
 
+        if not self.mask_dir.exists():
+            return self.transform(image), true_caption, false_caption, image_name
+
         # get mask
-        mask = None
-        if self.mask_dir:
-            mask_path = os.path.join(self.mask_dir, item["image_id"] + '_mask.pkl')
-            mask = load_mask(mask_path, (image.height, image.width, 3))
-            rgba = np.concatenate((image, np.expand_dims(mask, axis=-1)), axis=-1)
-            mask = rgba[:, :, -1]
+        edge_path = self.mask_dir.joinpath(f"{item['__key__']}_edges.pkl")
+        edge = load_DINO_mask(edge_path, (image.height, image.width, 3))
+        rgba = np.concatenate((image, np.expand_dims(edge, axis=-1)), axis=-1)
+        mask = rgba[:, :, -1]
 
-        image = self.transform(image) if self.transform else image
-        mask = self.mask_transform(mask * 255) if mask is not None else None
+        image_torch = self.transform(image)
+        mask_torch = self.mask_transform(Image.fromarray(mask * 255))
 
-        if mask is not None:
-            return image, mask, true_caption, false_caption, image_name
-        else:
-            return image, true_caption, false_caption, image_name
+        return image_torch, true_caption, false_caption, image_name, mask_torch

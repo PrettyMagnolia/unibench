@@ -151,8 +151,9 @@ def main():
     ]
     benchmark_list = [
         # 'vg_attribution',
-        'vg_relation',
+        # 'vg_relation',
         # 'imagenet1k'
+        'dmlab'
     ]
     for benchmark in benchmark_list:
         if benchmark in not_support_benchmarks:

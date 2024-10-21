@@ -41,29 +41,35 @@ class ZeroShotBenchmarkHandler(BenchmarkHandler):
         model.set_templates(self.templates)
         model.compute_zeroshot_weights()
 
-    def get_zeroshot_predictions(self, model, images):
+    def get_zeroshot_predictions(self, model, images, mask):
         logit_scale = (
             model.logit_scale.exp()
             if model.logit_scale is not None
             else torch.tensor(100.0)
         )
-
+        if 'semantic' not in model.model_name:
+            mask = None
+            pass
         return (
-            (logit_scale * model.get_image_embeddings(images) @ model.zeroshot_weights)
+            (logit_scale * model.get_image_embeddings(images, mask) @ model.zeroshot_weights)
             .squeeze()
             .float()
         )
 
     def eval_batch(self, model, batch):
         split = ""
+        mask = None
         if len(batch) == 4:
-            images, targets, sample_id, split = batch
+            if isinstance(batch[3], str):
+                images, targets, sample_id, split = batch
+            else:
+                images, targets, sample_id, mask = batch
         elif len(batch) == 3:
             images, targets, sample_id = batch
         else:
             images, targets = batch
 
-        logits = self.get_zeroshot_predictions(model, images)
+        logits = self.get_zeroshot_predictions(model, images, mask)
 
         if len(targets.shape) > 1:
             pred = softmax(logits, dim=-1).topk(1)[1].squeeze()
@@ -200,12 +206,13 @@ class RelationBenchmarkHandler(BenchmarkHandler):
 
 
 class VgBenchmarkHandler(BenchmarkHandler):
-    def __init__(self, benchmark_name, benchmark, has_mask=False):
+    def __init__(self, benchmark_name, benchmark):
         BenchmarkHandler.__init__(self, benchmark_name, benchmark)
-        self.has_mask = has_mask
 
     def get_similarity(self, model, images, captions, mask=None):
         # 获取图像的嵌入表示
+        if 'semantic' not in model.model_name:
+            mask = None
         image_features = model.get_image_embeddings(images, mask=mask)
 
         # 获取caption的嵌入表示
@@ -231,11 +238,11 @@ class VgBenchmarkHandler(BenchmarkHandler):
         return scores
 
     def eval_batch(self, model, batch):
-        mask = None
-        if self.has_mask:
-            images, mask, correct_caption, incorrect_caption, sample_id = batch
+        if len(batch) == 5:
+            images, correct_caption, incorrect_caption, sample_id, mask = batch
         else:
             images, correct_caption, incorrect_caption, sample_id = batch
+            mask = None
 
         captions = [correct_caption, incorrect_caption]
 
