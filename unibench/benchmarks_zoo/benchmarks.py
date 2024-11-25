@@ -1625,8 +1625,7 @@ def vg_attribution(benchmark_name, transform=None, has_mask=False, **kwargs):
     img_file = r'/mnt/shared/unibench/data/raw/aro/images'
     json_file = r'/mnt/shared/unibench/data/raw/aro/visual_genome_attribution.json'
     mask_file = r'/mnt/shared/unibench/data/DINO/aro'
-    benchmark = VgDataset(image_dir=img_file, json_file=json_file, transform=transform,
-                          mask_dir=mask_file if has_mask else None)
+    benchmark = VgDataset(task_type='vga', transform=transform)
     return VgBenchmarkHandler(
         benchmark_name=benchmark_name,
         benchmark=benchmark,

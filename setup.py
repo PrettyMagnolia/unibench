@@ -47,7 +47,7 @@ setuptools.setup(
         "fairscale",
         "tabulate",
         "GitPython",
-        "torchvision",
+        # "torchvision",
         "rich",
         "oslo.concurrency",
         "transformers",
