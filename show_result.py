@@ -52,7 +52,7 @@ def get_aggregated_result(benchmark_acc_mapping, benchmark_type_mapping):
     return average_accuracy_by_type
 
 
-def show_aggregated_result():
+def show_aggregated_result(names):
     result = {}
     benchmark_type_mapping = get_benchmark_type_mapping()
     for name in names:
@@ -61,20 +61,22 @@ def show_aggregated_result():
 
         aggregated_result = get_aggregated_result(benchmark_acc_mapping, benchmark_type_mapping)
         result[name] = aggregated_result
+    return result
 
-    print(result)
-def show_origin_result():
+
+def show_origin_result(names):
     result = {}
     for name in names:
         res_dir = os.path.join(base_dir, name)
         benchmark_acc_mapping = get_benchmark_acc_mapping(res_dir)
 
         result[name] = benchmark_acc_mapping
+    return result
 
-    print(result)
 def main():
     show_origin_result()
     show_aggregated_result()
+
 
 if __name__ == '__main__':
     main()
