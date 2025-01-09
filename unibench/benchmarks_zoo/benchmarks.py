@@ -830,7 +830,7 @@ def imagenet_sketch(benchmark_name, transform=None, **kwargs):
 )
 def dmlab(benchmark_name, transform=None, **kwargs):
     benchmark = HuggingFaceDataset(
-        transform=transform, dataset_url="clip-benchmark/wds_vtab-dmlab", **kwargs
+        transform=transform, dataset_url="haideraltahan/wds_dmlab", **kwargs
     )
     return ZeroShotBenchmarkHandler(
         benchmark_name=benchmark_name,
@@ -1156,7 +1156,7 @@ def places365(benchmark_name, transform=None, **kwargs):
 def clevr_distance(benchmark_name, transform=None, **kwargs):
     benchmark = HuggingFaceDataset(
         transform=transform,
-        dataset_url="clip-benchmark/wds_vtab-clevr_closest_object_distance",
+        dataset_url="haideraltahan/wds_clevr_closest_object_distance",
         **kwargs
     )
     return ZeroShotBenchmarkHandler(
@@ -1182,7 +1182,7 @@ def clevr_distance(benchmark_name, transform=None, **kwargs):
 )
 def clevr_count(benchmark_name, transform=None, **kwargs):
     benchmark = HuggingFaceDataset(
-        transform=transform, dataset_url="clip-benchmark/wds_vtab-clevr_count_all", **kwargs
+        transform=transform, dataset_url="haideraltahan/wds_clevr_count_all", **kwargs
     )
     return ZeroShotBenchmarkHandler(
         benchmark_name=benchmark_name,
@@ -1306,7 +1306,7 @@ def resisc45(benchmark_name, transform=None, **kwargs):
 def dspr_orientation(benchmark_name, transform=None, **kwargs):
     benchmark = HuggingFaceDataset(
         transform=transform,
-        dataset_url="clip-benchmark/wds_vtab-dsprites_label_orientation",
+        dataset_url="haideraltahan/wds_dsprites_label_orientation",
         **kwargs
     )
     return ZeroShotBenchmarkHandler(
@@ -1360,7 +1360,7 @@ def kitti_distance(benchmark_name, transform=None, **kwargs):
 def smallnorb_azimuth(benchmark_name, transform=None, **kwargs):
     benchmark = HuggingFaceDataset(
         transform=transform,
-        dataset_url="clip-benchmark/wds_vtab-smallnorb_label_azimuth",
+        dataset_url="haideraltahan/wds_smallnorb_label_azimuth",
         **kwargs
     )
     return ZeroShotBenchmarkHandler(
@@ -1387,7 +1387,7 @@ def smallnorb_azimuth(benchmark_name, transform=None, **kwargs):
 def smallnorb_elevation(benchmark_name, transform=None, **kwargs):
     benchmark = HuggingFaceDataset(
         transform=transform,
-        dataset_url="clip-benchmark/wds_vtab-smallnorb_label_elevation",
+        dataset_url="haideraltahan/wds_smallnorb_label_elevation",
         **kwargs
     )
     return ZeroShotBenchmarkHandler(
@@ -1414,7 +1414,7 @@ def smallnorb_elevation(benchmark_name, transform=None, **kwargs):
 def dspr_x_position(benchmark_name, transform=None, **kwargs):
     benchmark = HuggingFaceDataset(
         transform=transform,
-        dataset_url="clip-benchmark/wds_vtab-dsprites_label_x_position",
+        dataset_url="haideraltahan/wds_dsprites_label_x_position",
         **kwargs
     )
     return ZeroShotBenchmarkHandler(
@@ -1441,7 +1441,7 @@ def dspr_x_position(benchmark_name, transform=None, **kwargs):
 def dspr_y_position(benchmark_name, transform=None, **kwargs):
     benchmark = HuggingFaceDataset(
         transform=transform,
-        dataset_url="clip-benchmark/wds_vtab-dsprites_label_y_position",
+        dataset_url="haideraltahan/wds_dsprites_label_y_position",
         **kwargs
     )
     return ZeroShotBenchmarkHandler(
@@ -1518,18 +1518,18 @@ def dollar_street(benchmark_name, transform=None, **kwargs):
     },
 )
 def vg_relation(benchmark_name, transform=None, has_mask=False, **kwargs):
-    # benchmark = HuggingFaceDataset(
-    #     transform=transform, dataset_url="haideraltahan/wds_vg_relation", **kwargs
-    # )
-    # return RelationBenchmarkHandler(
-    #     benchmark_name=benchmark_name,
-    #     benchmark=benchmark,
-    # )
-    benchmark = VgDataset(task_type='vgr', transform=transform)
-    return VgBenchmarkHandler(
+    benchmark = HuggingFaceDataset(
+        transform=transform, dataset_url="haideraltahan/wds_vg_relation", **kwargs
+    )
+    return RelationBenchmarkHandler(
         benchmark_name=benchmark_name,
         benchmark=benchmark,
     )
+    # benchmark = VgDataset(task_type='vgr', transform=transform)
+    # return VgBenchmarkHandler(
+    #     benchmark_name=benchmark_name,
+    #     benchmark=benchmark,
+    # )
 
 
 @register_benchmark(
@@ -1547,7 +1547,7 @@ def vg_relation(benchmark_name, transform=None, has_mask=False, **kwargs):
 )
 def flickr30k_order(benchmark_name, transform=None, **kwargs):
     benchmark = HuggingFaceDataset(
-        transform=transform, dataset_url="clip-benchmark/wds_flickr30k", **kwargs
+        transform=transform, dataset_url="haideraltahan/wds_flickr30k_order", **kwargs
     )
     return RelationBenchmarkHandler(
         benchmark_name=benchmark_name,
@@ -1615,22 +1615,18 @@ def winoground(benchmark_name, transform=None, **kwargs):
     },
 )
 def vg_attribution(benchmark_name, transform=None, has_mask=False, **kwargs):
-    # benchmark = HuggingFaceDataset(
-    #     transform=transform, dataset_url="haideraltahan/wds_vg_attribution", **kwargs
-    # )
-    # return RelationBenchmarkHandler(
-    #     benchmark_name=benchmark_name,
-    #     benchmark=benchmark,
-    # )
-    img_file = r'/mnt/shared/unibench/data/raw/aro/images'
-    json_file = r'/mnt/shared/unibench/data/raw/aro/visual_genome_attribution.json'
-    mask_file = r'/mnt/shared/unibench/data/DINO/aro'
-    benchmark = VgDataset(image_dir=img_file, json_file=json_file, transform=transform,
-                          mask_dir=mask_file if has_mask else None)
-    return VgBenchmarkHandler(
+    benchmark = HuggingFaceDataset(
+        transform=transform, dataset_url="haideraltahan/wds_vg_attribution", **kwargs
+    )
+    return RelationBenchmarkHandler(
         benchmark_name=benchmark_name,
         benchmark=benchmark,
     )
+    # benchmark = VgDataset(task_type='vga', transform=transform)
+    # return VgBenchmarkHandler(
+    #     benchmark_name=benchmark_name,
+    #     benchmark=benchmark,
+    # )
 
 
 @register_benchmark(

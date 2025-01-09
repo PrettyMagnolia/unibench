@@ -49,7 +49,6 @@ class ZeroShotBenchmarkHandler(BenchmarkHandler):
         )
         if 'semantic' not in model.model_name:
             mask = None
-            pass
         return (
             (logit_scale * model.get_image_embeddings(images, mask) @ model.zeroshot_weights)
             .squeeze()

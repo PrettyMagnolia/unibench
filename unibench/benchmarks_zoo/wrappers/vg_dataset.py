@@ -45,12 +45,24 @@ class VgDataset(Dataset):
             return self.transform(image), true_caption, false_caption, image_name
 
         # get mask
-        edge_path = self.mask_dir.joinpath(f"{item['__key__']}_edges.pkl")
+        edge_path = self.mask_dir.joinpath(f"{item['image_id']}_edges.pkl")
         edge = load_DINO_mask(edge_path, (image.height, image.width, 3))
         rgba = np.concatenate((image, np.expand_dims(edge, axis=-1)), axis=-1)
+        h, w = rgba.shape[:2]
+
+        if max(h, w) == w:
+            pad = (w - h) // 2
+            l, r = pad, w - h - pad
+            rgba = np.pad(rgba, ((l, r), (0, 0), (0, 0)), 'constant', constant_values=0)
+        else:
+            pad = (h - w) // 2
+            l, r = pad, h - w - pad
+            rgba = np.pad(rgba, ((0, 0), (l, r), (0, 0)), 'constant', constant_values=0)
+
+        rgb = rgba[:, :, :-1]
         mask = rgba[:, :, -1]
 
-        image_torch = self.transform(image)
+        image_torch = self.transform(Image.fromarray(rgb))
         mask_torch = self.mask_transform(Image.fromarray(mask * 255))
 
         return image_torch, true_caption, false_caption, image_name, mask_torch

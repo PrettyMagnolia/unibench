@@ -4,17 +4,19 @@ import pandas as pd
 from unibench.benchmarks_zoo.registry import get_benchmark_info, list_benchmarks
 from collections import defaultdict
 
-base_dir = '/mnt/user_data/yifei/unibench/outputs'
+base_dir = '/mnt/shared/unibench/outputs'
 
 names = [
-    'clip_vit_b_16',
-    'clip_vit_l_14',
-    'clip_vit_l_14_336',
+    # 'clip_vit_b_16',
+    # 'clip_vit_l_14',
+    # 'clip_vit_l_14_336',
     # 'open_clip-vit_b_16',
     # 'open_clip_vit_l_14',
-    'alpha_clip_vit_b_16',
-    'alpha_clip_vit_l_14',
-    'alpha_clip_vit_l_14_336',
+    # 'alpha_clip_vit_b_16',
+    # 'alpha_clip_vit_l_14',
+    # 'alpha_clip_vit_l_14_336',
+    'semantic_clip_vit_b_16'
+
 ]
 
 
@@ -71,7 +73,7 @@ def show_origin_result():
 
     print(result)
 def main():
-    # show_origin_result()
+    show_origin_result()
     show_aggregated_result()
 
 if __name__ == '__main__':

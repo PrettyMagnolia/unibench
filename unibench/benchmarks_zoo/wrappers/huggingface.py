@@ -146,7 +146,8 @@ class HuggingFaceDataset(Dataset):
                 samples,
                 target,
                 str(item["__key__"]),
-                item["split.txt"].decode("utf-8"),
+                # item["split.txt"].decode("utf-8"),
+                item["split.txt"],
             )
         if not self.mask_dir.exists():
             return samples, target, str(item["__key__"])
