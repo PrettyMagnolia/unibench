@@ -6,7 +6,7 @@ import open_clip
 import alpha_clip
 from unibench import Evaluator
 from unibench.models_zoo.wrappers.clip import ClipModel, AlphaClipModel
-import argparse
+from unibench.common_utils import args
 
 # names cannot contain '-
 
@@ -74,7 +74,7 @@ model_config = {
     'semantic_clip_rn50': {
         'model_name': '/mnt/shared/unibench/models/clip/RN50.pt',
         'tokenizer_name': 'RN50',
-        'model_path': '/mnt/shared/unibench/models/semantic-clip/semantic_clip_rn50.pth',
+        'model_path': '/mnt/shared/unibench/models/semantic-clip/semantic_clip_rn50_new.pth',
         'load_type': 'alpha-clip',
     },
     'semantic_clip_convnext_base_w': {
@@ -162,17 +162,14 @@ def evaluate_models(names, benchmarks=None):
     # eval.show_results()
 
 
-def main():
-    parser = argparse.ArgumentParser(description='Evaluate models on benchmarks.')
-    parser.add_argument('--model_ids', nargs='+', required=True, help='List of model names to evaluate')
-    args = parser.parse_args()
-
-    model_ids = args.model_ids
-
+def main(model_ids):
     benchmark_list = [
         'coco_order', 'flickr30k_order', 'sugarcrepe', 'vg_attribution', 'vg_relation', 'winoground', ## relation
         'clevr_count', 'clevr_distance', 'dmlab', 'dspr_orientation', 'dspr_x_position', 'dspr_y_position', 'smallnorb_azimuth', 'smallnorb_elevation', ## reasoning
     ]
+    # benchmark_list = [
+    #     'winoground'
+    # ]
 
     # for benchmark in benchmark_list:
     #     for name in names:
@@ -188,4 +185,5 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    main(args.model_ids)
+    

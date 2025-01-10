@@ -3,21 +3,9 @@ import os
 import pandas as pd
 from unibench.benchmarks_zoo.registry import get_benchmark_info, list_benchmarks
 from collections import defaultdict
+from unibench.common_utils import args
 
 base_dir = '/mnt/shared/unibench/outputs'
-
-names = [
-    # 'clip_vit_b_16',
-    # 'clip_vit_l_14',
-    # 'clip_vit_l_14_336',
-    # 'open_clip-vit_b_16',
-    # 'open_clip_vit_l_14',
-    # 'alpha_clip_vit_b_16',
-    # 'alpha_clip_vit_l_14',
-    # 'alpha_clip_vit_l_14_336',
-    'semantic_clip_vit_b_16'
-
-]
 
 
 def get_benchmark_type_mapping():
@@ -64,19 +52,23 @@ def show_aggregated_result(names):
     return result
 
 
-def show_origin_result(names):
+def show_origin_result(model_ids):
     result = {}
-    for name in names:
+    for name in model_ids:
         res_dir = os.path.join(base_dir, name)
         benchmark_acc_mapping = get_benchmark_acc_mapping(res_dir)
 
         result[name] = benchmark_acc_mapping
     return result
 
-def main():
-    show_origin_result()
-    show_aggregated_result()
+def main(model_ids):
+    # 完整结果
+    print(show_origin_result(model_ids))
+    # 按照任务分类聚集后的结果
+    print(show_aggregated_result(model_ids))
 
 
 if __name__ == '__main__':
-    main()
+    
+
+    main(args.model_ids)

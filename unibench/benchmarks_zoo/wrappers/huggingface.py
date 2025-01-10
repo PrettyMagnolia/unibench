@@ -10,7 +10,7 @@ from datasets import load_dataset, load_from_disk
 from huggingface_hub import hf_hub_download
 import torch
 from torch.utils.data import Dataset
-from ...common_utils import DATA_DIR, DS_CACHE_DIR, MASK_DIR, load_DINO_mask, get_mask_transform
+from ...common_utils import DATA_DIR, DS_CACHE_DIR, MASK_DIR, USE_MASK, load_DINO_mask, get_mask_transform
 from pathlib import Path
 
 
@@ -112,11 +112,11 @@ class HuggingFaceDataset(Dataset):
         item = self.dataset[index]
 
         # Loading Images
-        samples = []
+        samples, copy_imgs = [], []
         for k in item.keys():
             if self.image_extension in k or 'jpg' in k or 'jpeg' in k or 'png' in k:
                 img = item[k].convert("RGB")
-                copy_img = img
+                copy_imgs.append(img)
                 if self.transform is not None:
                     img = self.transform(img)
                 samples.append(img)
@@ -140,23 +140,29 @@ class HuggingFaceDataset(Dataset):
                 if self.target_transform is not None:
                     t = self.target_transform(t)
 
+        # todo: add mask
+        mask_torch = None
+        if USE_MASK and self.mask_dir.exists():
+            if isinstance(samples, list):
+                mask_torch = []
+                for idx, copy_img in enumerate(copy_imgs):
+                    edge_path = self.mask_dir.joinpath(f"{item['__key__']}_{idx}_edges.pkl")
+                    edge = load_DINO_mask(edge_path, (copy_img.height, copy_img.width, 3))
+                    rgba = np.concatenate((np.array(copy_img), np.expand_dims(edge, axis=-1)), axis=-1)
+                    mask = rgba[:, :, -1]
+                    mask_torch.append(self.mask_transform(Image.fromarray(mask * 255)))
+            else:
+                copy_img = copy_imgs[0]
+                edge_path = self.mask_dir.joinpath(f"{item['__key__']}_edges.pkl")
+                edge = load_DINO_mask(edge_path, (copy_img.height, copy_img.width, 3))
+                rgba = np.concatenate((copy_img, np.expand_dims(edge, axis=-1)), axis=-1)
+                mask = rgba[:, :, -1]
+                mask_torch = self.mask_transform(Image.fromarray(mask * 255))
+
+        split = ''
         if "split.txt" in item.keys():
-            return (
-                samples,
-                target,
-                str(item["__key__"]),
-                # item["split.txt"].decode("utf-8"),
-                item["split.txt"],
-            )
-        if not self.mask_dir.exists():
-            return samples, target, str(item["__key__"])
+            split = item["split.txt"]
 
-        # get mask
-        edge_path = self.mask_dir.joinpath(f"{item['__key__']}_edges.pkl")
-        edge = load_DINO_mask(edge_path, (copy_img.height, copy_img.width, 3))
-        rgba = np.concatenate((copy_img, np.expand_dims(edge, axis=-1)), axis=-1)
-        mask = rgba[:, :, -1]
-
-        mask_torch = self.mask_transform(Image.fromarray(mask * 255))
-
-        return samples, target, str(item["__key__"]), mask_torch
+        if mask_torch is None:
+            return samples, target, str(item["__key__"]), split
+        return samples, target, str(item["__key__"]), split, mask_torch

@@ -9,6 +9,7 @@ import itertools
 from torch.distributions import Categorical
 from torch import softmax
 import torch
+from ...common_utils import USE_MASK
 
 
 class BenchmarkHandler:
@@ -47,26 +48,31 @@ class ZeroShotBenchmarkHandler(BenchmarkHandler):
             if model.logit_scale is not None
             else torch.tensor(100.0)
         )
-        if 'semantic' not in model.model_name:
-            mask = None
-        return (
-            (logit_scale * model.get_image_embeddings(images, mask) @ model.zeroshot_weights)
-            .squeeze()
-            .float()
-        )
+
+        if USE_MASK and mask is not None:
+            img_emb = model.get_image_embeddings(images, mask)
+        else:
+            img_emb = model.get_image_embeddings(images)
+        return (logit_scale * img_emb @ model.zeroshot_weights).squeeze().float()
 
     def eval_batch(self, model, batch):
-        split = ""
+        # split = ""
+        # if len(batch) == 4:
+        #     if isinstance(batch[3], str):
+        #         images, targets, sample_id, split = batch
+        #     else:
+        #         images, targets, sample_id, mask = batch
+        # elif len(batch) == 3:
+        #     images, targets, sample_id = batch
+        # else:
+        #     images, targets = batch
         mask = None
         if len(batch) == 4:
-            if isinstance(batch[3], str):
-                images, targets, sample_id, split = batch
-            else:
-                images, targets, sample_id, mask = batch
-        elif len(batch) == 3:
-            images, targets, sample_id = batch
+            images, targets, sample_id, split = batch
+        elif len(batch) == 5:
+            images, targets, sample_id, split, mask = batch
         else:
-            images, targets = batch
+            raise ValueError("Invalid batch format")
 
         logits = self.get_zeroshot_predictions(model, images, mask)
 
@@ -134,8 +140,12 @@ class RelationBenchmarkHandler(BenchmarkHandler):
     def __init__(self, benchmark_name, benchmark):
         BenchmarkHandler.__init__(self, benchmark_name, benchmark)
 
-    def get_similarity(self, model, images, captions):
-        image_features = model.get_image_embeddings(images)
+    def get_similarity(self, model, images, captions, mask):
+        if USE_MASK and mask is not None:
+            image_features = model.get_image_embeddings(images, mask)
+        else:
+            image_features = model.get_image_embeddings(images)
+        # image_features = model.get_image_embeddings(images)
         num_captions = len(captions)
         batch_size = len(captions[0])
 
@@ -157,15 +167,21 @@ class RelationBenchmarkHandler(BenchmarkHandler):
         return scores
 
     def eval_batch(self, model, batch):
-        attribute = None
+        # attribute = None
+        # if len(batch) == 4:
+        #     images, captions, sample_id, attribute = batch
+        # else:
+        #     images, captions, sample_id = batch
+        mask = None
         if len(batch) == 4:
             images, captions, sample_id, attribute = batch
-        else:
-            images, captions, sample_id = batch
+        elif len(batch) == 5:
+            images, captions, sample_id, attribute, mask = batch
+            
 
         if isinstance(images, list):
-            c_i0 = self.get_similarity(model, images[0], captions).squeeze()
-            c_i1 = self.get_similarity(model, images[1], captions).squeeze()
+            c_i0 = self.get_similarity(model, images[0], captions, mask[0] if mask is not None else None).squeeze()
+            c_i1 = self.get_similarity(model, images[1], captions, mask[1] if mask is not None else None).squeeze()
             text_correct = torch.logical_and(
                 c_i0[:, 0] > c_i0[:, 1], c_i1[:, 1] > c_i1[:, 0]
             ).int()
@@ -182,7 +198,7 @@ class RelationBenchmarkHandler(BenchmarkHandler):
                 "image_correctness": image_correct,
             }
         else:
-            scores = self.get_similarity(model, images, captions)
+            scores = self.get_similarity(model, images, captions, mask)
             preds = torch.argmax(scores.squeeze(), axis=-1)
             correct = (preds == 0).int()
 

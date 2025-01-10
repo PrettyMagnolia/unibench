@@ -7,6 +7,8 @@ LICENSE file in the root directory of this source tree.
 from os.path import join as pjoin
 from pathlib import Path
 import os
+import argparse
+
 
 ##################################################################
 # DIRECTORIES
@@ -22,3 +24,11 @@ MASK_DIR = CACHE_DIR.joinpath("data").joinpath('DINO')
 OUTPUT_DIR = CACHE_DIR.joinpath("outputs")
 LOCK_DIR = CACHE_DIR.joinpath("locks")
 DS_CACHE_DIR = CACHE_DIR.joinpath("cache")
+
+parser = argparse.ArgumentParser(description='Evaluate models on benchmarks.')
+parser.add_argument('--use_mask', action='store_true', help='Use mask for evaluation')
+parser.add_argument('--model_ids', nargs='+', help='List of model names to evaluate')
+parser.add_argument('--dataset_names', nargs='+', help='List of dataset names to process')
+
+args = parser.parse_args()
+USE_MASK = args.use_mask

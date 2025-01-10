@@ -37,7 +37,7 @@ class ClipModel(AbstractModel):
         self.zeroshot_weights = torch.stack(zeroshot_weights).T
 
     @torch.no_grad()
-    def get_image_embeddings(self, images, mask=None):
+    def get_image_embeddings(self, images):
         image_features = self.model.encode_image(images.to(self.device))
         image_features /= image_features.norm(dim=1, keepdim=True)
         return image_features.unsqueeze(1)
@@ -92,9 +92,8 @@ class AlphaClipModel(AbstractModel):
         self.zeroshot_weights = torch.stack(zeroshot_weights).T
 
     @torch.no_grad()
-    def get_image_embeddings(self, images, mask):
+    def get_image_embeddings(self, images, mask=None):
         if mask is None:
-            # alpha clip 的输入为全零 mask
             mask = mask_transform(np.zeros((images.shape[-2], images.shape[-1])) * 255)
         image_features = self.model.encode_image(images.to(self.device), mask.to(self.device))
         image_features /= image_features.norm(dim=1, keepdim=True)
