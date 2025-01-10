@@ -1,6 +1,4 @@
 import os
-
-os.environ['HF_ENDPOINT'] = 'https://hf-mirror.com'
 from functools import partial
 
 import clip
@@ -8,6 +6,7 @@ import open_clip
 import alpha_clip
 from unibench import Evaluator
 from unibench.models_zoo.wrappers.clip import ClipModel, AlphaClipModel
+import argparse
 
 # names cannot contain '-
 
@@ -18,7 +17,6 @@ model_config = {
         'model_path': '/mnt/shared/unibench/models/clip/RN50.pt',
         'load_type': 'clip',
     },
-
     'clip_vit_b_16': {
         'model_name': 'ViT-B-16',
         'tokenizer_name': 'ViT-B-16',
@@ -165,40 +163,28 @@ def evaluate_models(names, benchmarks=None):
 
 
 def main():
-    names = [
-        # 'clip_rn50',
-        # 'clip_vit_b_16',
-        # 'clip_vit_l_14',
-        # 'clip_vit_l_14_336',
-        # 'open_clip_convnext_base_w',
-        # 'open_clip_vit_b_16',
-        # 'alpha_clip_vit_b_16',
-        # 'alpha_clip_vit_l_14',
-        # 'alpha_clip_vit_l_14_336',
-        # 'semantic_clip_rn50',
-        'semantic_clip_convnext_base_w',
-        # 'semantic_clip_vit_b_16_2e_6',
-        # 'semantic_clip_vit_b_16_4e_6',
-        # 'semantic_clip_vit_b_16_6e_6',
-    ]
+    parser = argparse.ArgumentParser(description='Evaluate models on benchmarks.')
+    parser.add_argument('--model_ids', nargs='+', required=True, help='List of model names to evaluate')
+    args = parser.parse_args()
+
+    model_ids = args.model_ids
 
     benchmark_list = [
-        # 'coco_order', 'flickr30k_order', 'sugarcrepe', 'vg_attribution', 'vg_relation', 'winoground', ## relation
-        # 'clevr_count', 'clevr_distance', 'dmlab', 'dspr_orientation', 
-        'dspr_x_position', 'dspr_y_position', 'smallnorb_azimuth', 'smallnorb_elevation', ## reasoning
+        'coco_order', 'flickr30k_order', 'sugarcrepe', 'vg_attribution', 'vg_relation', 'winoground', ## relation
+        'clevr_count', 'clevr_distance', 'dmlab', 'dspr_orientation', 'dspr_x_position', 'dspr_y_position', 'smallnorb_azimuth', 'smallnorb_elevation', ## reasoning
     ]
 
-    for benchmark in benchmark_list:
-        for name in names:
-            res_file = '/mnt/shared/unibench/outputs' + '/' + name + '/' + benchmark + '.f'
-            if os.path.exists(res_file):
-                print(f'Result file {res_file} already exists. Skipping evaluation.')
-                # continue
+    # for benchmark in benchmark_list:
+    #     for name in names:
+    #         res_file = '/mnt/shared/unibench/outputs' + '/' + name + '/' + benchmark + '.f'
+    #         if os.path.exists(res_file):
+    #             print(f'Result file {res_file} already exists. Skipping evaluation.')
+    #             # continue
 
-            print(f'Running benchmark: {benchmark}, model: {name}')
-            evaluate_models([name], benchmarks=[benchmark])
+    #         print(f'Running benchmark: {benchmark}, model: {name}')
+    #         evaluate_models([name], benchmarks=[benchmark])
 
-    # evaluate_models(names, benchmarks=benchmark_list)
+    evaluate_models(model_ids, benchmarks=benchmark_list)
 
 
 if __name__ == '__main__':

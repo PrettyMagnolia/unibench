@@ -21,7 +21,6 @@ class HuggingFaceDataset(Dataset):
             filename=filename,
             repo_type="dataset",
             local_dir=dir,
-            local_dir_use_symlinks=False,
             cache_dir=DS_CACHE_DIR
         )
 
@@ -43,7 +42,7 @@ class HuggingFaceDataset(Dataset):
             root: str = DATA_DIR,
             transform=None,
             target_transform=None,
-            download_num_workers=60,
+            download_num_workers=4,
             image_extension="webp",
             classes=None,
             templates=None,

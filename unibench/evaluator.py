@@ -90,7 +90,7 @@ class Evaluator(object):
     def __init__(
         self,
         seed: int = 1337,
-        num_workers=int(os.environ.get("SLURM_CPUS_PER_TASK") or 96),
+        num_workers=int(os.environ.get("SLURM_CPUS_PER_TASK") or 4),
         models: Union[List[str], str] = "all",
         benchmarks: Union[List[str], str] = "all",
         model_id: Union[int, None] = None,
