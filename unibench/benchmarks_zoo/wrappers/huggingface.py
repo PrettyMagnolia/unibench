@@ -4,6 +4,7 @@ All rights reserved.
 This source code is licensed under the license found in the
 LICENSE file in the root directory of this source tree.
 """
+import os
 import numpy as np
 from PIL import Image
 from datasets import load_dataset, load_from_disk
@@ -16,13 +17,16 @@ from pathlib import Path
 
 class HuggingFaceDataset(Dataset):
     def load_txt_file(self, dataset_url, filename, dir):
-        file = hf_hub_download(
-            repo_id=dataset_url,
-            filename=filename,
-            repo_type="dataset",
-            local_dir=dir,
-            cache_dir=DS_CACHE_DIR
-        )
+        if not os.path.exists(os.path.join(dir, filename)):
+            file = hf_hub_download(
+                repo_id=dataset_url,
+                filename=filename,
+                repo_type="dataset",
+                local_dir=dir,
+                cache_dir=DS_CACHE_DIR
+            )
+        else:
+            file = os.path.join(dir, filename)
 
         res = []
         with open(file) as f:
