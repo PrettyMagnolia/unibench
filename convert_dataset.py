@@ -35,7 +35,4 @@ for dataset_name in args.dataset_names:
             name = data['__key__']
             image_data.save(target_dir.joinpath(f'{name}.jpg'), format='JPEG')
     print(f'Finished processing dataset {dataset_name} from {source_dir} to {target_dir}')
-
-
-
         

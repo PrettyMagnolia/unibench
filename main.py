@@ -47,6 +47,30 @@ model_config = {
         'model_path': '/mnt/shared/unibench/models/open-clip/CLIP-ViT-B-16-laion2B-s34B-b88K/open_clip_pytorch_model.bin',
         'load_type': 'open-clip',
     },
+    'open_clip_vit_b_32': {
+        'model_name': 'ViT-B-32',
+        'tokenizer_name': 'ViT-B-32',
+        'model_path': '/mnt/shared/unibench/models/open-clip/CLIP-ViT-B-32-laion2B-s34B-b79K/open_clip_pytorch_model.bin',
+        'load_type': 'open-clip',
+    },
+    'open_clip_vit_b_32_cc3m': {
+        'model_name': 'ViT-B-32',
+        'tokenizer_name': 'ViT-B-32',
+        'model_path': '/home/yifei/code/VL-CheckList/models/ft_cc3m/epoch_10.pt',
+        'load_type': 'open-clip',
+    },
+    'open_clip_vit_b_32_cc3m_edge': {
+        'model_name': 'ViT-B-32',
+        'tokenizer_name': 'ViT-B-32',
+        'model_path': '/home/yifei/code/VL-CheckList/models/ft_cc3m_with_edges/epoch_30.pt',
+        'load_type': 'open-clip',
+    },
+    'open_clip_vit_b_32_cc3m_edge_neg': {
+        'model_name': 'ViT-B-32',
+        'tokenizer_name': 'ViT-B-32',
+        'model_path': '/home/yifei/code/VL-CheckList/models/ft_cc3m_with_edges_and_neg/epoch_30.pt',
+        'load_type': 'open-clip',
+    },
     'open_clip_vit_l_14': {
         'model_name': 'ViT-L-14',
         'tokenizer_name': 'ViT-L-14',
@@ -74,7 +98,7 @@ model_config = {
     'semantic_clip_rn50': {
         'model_name': '/mnt/shared/unibench/models/clip/RN50.pt',
         'tokenizer_name': 'RN50',
-        'model_path': '/mnt/shared/unibench/models/semantic-clip/semantic_clip_rn50_new.pth',
+        'model_path': '/mnt/shared/unibench/models/semantic-clip/semantic_clip_rn50.pth',
         'load_type': 'alpha-clip',
     },
     'semantic_clip_convnext_base_w': {
@@ -165,10 +189,14 @@ def evaluate_models(names, benchmarks=None):
 def main(model_ids):
     benchmark_list = [
         'coco_order', 'flickr30k_order', 'sugarcrepe', 'vg_attribution', 'vg_relation', 'winoground', ## relation
-        'clevr_count', 'clevr_distance', 'dmlab', 'dspr_orientation', 'dspr_x_position', 'dspr_y_position', 'smallnorb_azimuth', 'smallnorb_elevation', ## reasoning
+        'clevr_count', 'clevr_distance', 
+        'countbench', 
+        'dmlab', 'dspr_orientation', 'dspr_x_position', 'dspr_y_position', 
+        'kitti_distance', 
+        'smallnorb_azimuth', 'smallnorb_elevation', ## reasoning
     ]
     # benchmark_list = [
-    #     'winoground'
+    #     'clevr_distance', 'dspr_orientation', 'dspr_x_position', 'dspr_y_position', 'smallnorb_elevation'
     # ]
 
     # for benchmark in benchmark_list:

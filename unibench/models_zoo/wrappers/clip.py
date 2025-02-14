@@ -37,8 +37,15 @@ class ClipModel(AbstractModel):
         self.zeroshot_weights = torch.stack(zeroshot_weights).T
 
     @torch.no_grad()
-    def get_image_embeddings(self, images):
-        image_features = self.model.encode_image(images.to(self.device))
+    def get_image_embeddings(self, images, mask=None):
+        if mask is None:
+            image_features = self.model.encode_image(images.to(self.device))
+        else:
+            image_features = self.model.encode_image(
+                image=images.to(self.device),
+                object_sense=mask.to(self.device), 
+                object_sense_format='edges'
+            )
         image_features /= image_features.norm(dim=1, keepdim=True)
         return image_features.unsqueeze(1)
 

@@ -63,9 +63,16 @@ def show_origin_result(model_ids):
 
 def main(model_ids):
     # 完整结果
-    print(show_origin_result(model_ids))
-    # 按照任务分类聚集后的结果
-    print(show_aggregated_result(model_ids))
+    dataset_list = ["clevr_count", "clevr_distance", "countbench", "dmlab", "dspr_orientation", "dspr_x_position", "dspr_y_position", "kitti_distance", "smallnorb_elevation", "coco_order", "flickr30k_order", "sugarcrepe", "vg_attribution", "vg_relation", "winoground"]
+    for model_id in model_ids:
+        print(f"Model: {model_id}")
+        res_dir = os.path.join(base_dir, model_id)
+        benchmark_acc_mapping = get_benchmark_acc_mapping(res_dir)
+        for dataset in dataset_list:
+            print(f"{dataset}, {benchmark_acc_mapping.get(dataset, 0):.2f}")
+    
+    # 按照任务分类聚集后的结果 -> 通过 excel 实现
+    # print(show_aggregated_result(model_ids))
 
 
 if __name__ == '__main__':
