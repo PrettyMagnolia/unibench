@@ -5,7 +5,7 @@ from unibench.benchmarks_zoo.registry import get_benchmark_info, list_benchmarks
 from collections import defaultdict
 from unibench.common_utils import args
 
-base_dir = '/mnt/shared/unibench/outputs'
+base_dir = '/home/yifei/code/unibench/outputs'
 
 
 def get_benchmark_type_mapping():

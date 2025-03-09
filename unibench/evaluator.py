@@ -334,7 +334,7 @@ class Evaluator(object):
                                 batch[i] = batch[i].to(device)
 
                         with torch.no_grad(), torch.cuda.amp.autocast():
-                            values_to_save = dh.eval_batch(model, batch)
+                            values_to_save = dh.eval_batch(model, batch, has_mask=self.has_mask)
 
                         self.outputhandler.add_values(
                             model_name=model_name, **values_to_save

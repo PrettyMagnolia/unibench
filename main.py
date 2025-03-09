@@ -6,7 +6,6 @@ import open_clip
 import alpha_clip
 from unibench import Evaluator
 from unibench.models_zoo.wrappers.clip import ClipModel, AlphaClipModel
-from unibench.common_utils import args
 
 # names cannot contain '-
 
@@ -34,6 +33,18 @@ model_config = {
         'tokenizer_name': 'ViT-L-14-336',
         'model_path': '/mnt/shared/unibench/models/clip/ViT-L-14-336px.pt',
         'load_type': 'clip',
+    },
+    'objects_clip_vit_b_32_neg_nums_20': {
+        'model_name': 'ViT-B-32',
+        'tokenizer_name': 'ViT-B-32',
+        'model_path': '/home/yifei/code/open_clip/logs/2025_02_28-01_17_04-model_ViT-B-32-lr_2e-05-b_128-j_4-p_amp/checkpoints/epoch_20.pt',
+        'load_type': 'open-clip',
+    },
+    'objects_clip_vit_b_32_clevr_20': {
+        'model_name': 'ViT-B-32',
+        'tokenizer_name': 'ViT-B-32',
+        'model_path': '/home/yifei/code/open_clip/logs/Objects-CLIP-CLEVR/checkpoints/epoch_20.pt',
+        'load_type': 'open-clip',
     },
     'open_clip_convnext_base_w': {
         'model_name': 'convnext_base_w',
@@ -213,5 +224,5 @@ def main(model_ids):
 
 
 if __name__ == '__main__':
-    main(args.model_ids)
+    main(['objects_clip_vit_b_32_clevr_20'])
     

@@ -11,7 +11,7 @@ from datasets import load_dataset, load_from_disk
 from huggingface_hub import hf_hub_download
 import torch
 from torch.utils.data import Dataset
-from ...common_utils import DATA_DIR, DS_CACHE_DIR, MASK_DIR, USE_MASK, load_DINO_mask, get_mask_transform
+from ...common_utils import DATA_DIR, DS_CACHE_DIR, MASK_DIR, load_DINO_mask, get_mask_transform
 from pathlib import Path
 
 
@@ -75,6 +75,8 @@ class HuggingFaceDataset(Dataset):
 
         self.mask_dir = MASK_DIR.joinpath(self.dataset_name)
         self.mask_transform = get_mask_transform(transform)
+
+        self.has_mask = kwargs['has_mask'] if kwargs['has_mask'] else False
 
         try:
             if classes is None:
@@ -146,7 +148,7 @@ class HuggingFaceDataset(Dataset):
 
         # todo: add mask
         mask_torch = None
-        if USE_MASK and self.mask_dir.exists():
+        if self.has_mask and self.mask_dir.exists():
             if isinstance(samples, list):
                 mask_torch = []
                 for idx, copy_img in enumerate(copy_imgs):
