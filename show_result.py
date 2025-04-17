@@ -1,11 +1,10 @@
 import os
-
+import argparse
 import pandas as pd
 from unibench.benchmarks_zoo.registry import get_benchmark_info, list_benchmarks
 from collections import defaultdict
-from unibench.common_utils import args
 
-base_dir = '/home/yifei/code/unibench/outputs'
+base_dir = '/mnt/user_data/yifei/outputs/unibench/'
 
 
 def get_benchmark_type_mapping():
@@ -63,7 +62,10 @@ def show_origin_result(model_ids):
 
 def main(model_ids):
     # 完整结果
-    dataset_list = ["clevr_count", "clevr_distance", "countbench", "dmlab", "dspr_orientation", "dspr_x_position", "dspr_y_position", "kitti_distance", "smallnorb_elevation", "coco_order", "flickr30k_order", "sugarcrepe", "vg_attribution", "vg_relation", "winoground"]
+    dataset_list = [
+        # "imagenet1k", 'cifar10', 'cifar100', 'mnist',
+        'clevr_count_new',
+        "clevr_count", "clevr_distance", "countbench", "dmlab", "dspr_orientation", "dspr_x_position", "dspr_y_position", "kitti_distance", "smallnorb_elevation", "coco_order", "flickr30k_order", "sugarcrepe", "vg_attribution", "vg_relation", "winoground"]
     for model_id in model_ids:
         print(f"Model: {model_id}")
         res_dir = os.path.join(base_dir, model_id)
@@ -76,6 +78,7 @@ def main(model_ids):
 
 
 if __name__ == '__main__':
-    
-
-    main(args.model_ids)
+    parser = argparse.ArgumentParser(description="Run OPEN_CLIP evaluation")
+    parser.add_argument("--exp_name", type=str, required=True, help="Experiment name")
+    args = parser.parse_args()
+    main([args.exp_name])

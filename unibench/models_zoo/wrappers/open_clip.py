@@ -31,11 +31,14 @@ class OpenClipModel(AbstractModel):
 
     @torch.no_grad()
     def get_image_embeddings(self, images, object_sense=None, object_sense_format=None):
-        image_features = self.model.encode_image(
-            image=images.to(self.device),
-            object_sense=object_sense.to(self.device),
-            object_sense_format=object_sense_format
-        )
+        if object_sense_format is not None:
+            image_features = self.model.encode_image(
+                image=images.to(self.device),
+                object_sense=object_sense.to(self.device),
+                object_sense_format=object_sense_format
+            )
+        else:
+            image_features = self.model.encode_image(images.to(self.device))
         image_features /= image_features.norm(dim=1, keepdim=True)
         return image_features.unsqueeze(1)
 
