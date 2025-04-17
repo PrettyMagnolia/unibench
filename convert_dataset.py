@@ -3,7 +3,18 @@ from datasets import Dataset
 from tqdm import tqdm
 import argparse
 from PIL import Image
-from unibench.common_utils import DATA_DIR, args
+from unibench.common_utils import DATA_DIR
+
+
+parser = argparse.ArgumentParser(description="Convert datasets to a unified image format.")
+parser.add_argument(
+    '--dataset_names',
+    type=str,
+    nargs='+',
+    required=True,
+    help='List of dataset names to process.'
+)
+args = parser.parse_args()
 
 
 for dataset_name in args.dataset_names:
@@ -11,7 +22,7 @@ for dataset_name in args.dataset_names:
     target_dir = DATA_DIR.parent.joinpath('images', dataset_name)
     print(f'Processing dataset {dataset_name}')
     os.makedirs(target_dir, exist_ok=True)
-    dataset = Dataset.load_from_disk(source_dir)
+    dataset = Dataset.load_from_disk(str(source_dir))
     for data in tqdm(dataset):
         # image_data = data.get('webp') or data.get('0.webp') or data.get('jpg') or data.get('png')
 

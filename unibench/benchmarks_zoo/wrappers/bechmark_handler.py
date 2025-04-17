@@ -49,7 +49,7 @@ class ZeroShotBenchmarkHandler(BenchmarkHandler):
         )
 
         if has_mask and mask is not None:
-            img_emb = model.get_image_embeddings(images, mask)
+            img_emb = model.get_image_embeddings(images, mask, 'edge')
         else:
             img_emb = model.get_image_embeddings(images)
         return (logit_scale * img_emb @ model.zeroshot_weights).squeeze().float()
@@ -141,7 +141,7 @@ class RelationBenchmarkHandler(BenchmarkHandler):
 
     def get_similarity(self, model, images, captions, has_mask, mask):
         if has_mask and mask is not None:
-            image_features = model.get_image_embeddings(images, mask)
+            image_features = model.get_image_embeddings(images, mask, 'edge')
         else:
             image_features = model.get_image_embeddings(images)
         # image_features = model.get_image_embeddings(images)

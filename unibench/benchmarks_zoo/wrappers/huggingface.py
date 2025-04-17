@@ -148,7 +148,8 @@ class HuggingFaceDataset(Dataset):
 
         # todo: add mask
         mask_torch = None
-        if self.has_mask and self.mask_dir.exists():
+        # if self.has_mask and self.mask_dir.exists():
+        if self.has_mask:
             if isinstance(samples, list):
                 mask_torch = []
                 for idx, copy_img in enumerate(copy_imgs):
