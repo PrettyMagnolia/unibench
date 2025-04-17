@@ -1191,6 +1191,33 @@ def clevr_count(benchmark_name, transform=None, **kwargs):
         templates=benchmark.templates,
     )
 
+@register_benchmark(
+    "vtab",
+    {
+        "benchmark": "zero-shot",
+        "benchmark_type": "reasoning",
+        "capability": "counting",
+        "curated": True,
+        "object_centric": False,
+        "image_resolution": [480, 320],
+        "num_classes": 8,
+        "llama2_ppi": 410266.22,
+    },
+)
+def clevr_count_new(benchmark_name, transform=None, **kwargs):
+    benchmark = CLEVRDataset(
+        transform=transform, **kwargs
+    )
+    # benchmark = HuggingFaceDataset(
+    #     transform=transform, dataset_url="haideraltahan/wds_clevr_count_all", **kwargs
+    # )
+    return ZeroShotBenchmarkHandler(
+        benchmark_name=benchmark_name,
+        benchmark=benchmark,
+        classes=benchmark.classes,
+        templates=benchmark.templates,
+    )
+
 
 @register_benchmark(
     "vtab",
@@ -1517,7 +1544,7 @@ def dollar_street(benchmark_name, transform=None, **kwargs):
         "llama2_ppi": None,
     },
 )
-def vg_relation(benchmark_name, transform=None, has_mask=False, **kwargs):
+def vg_relation(benchmark_name, transform=None, **kwargs):
     benchmark = HuggingFaceDataset(
         transform=transform, dataset_url="haideraltahan/wds_vg_relation", **kwargs
     )
@@ -1614,7 +1641,7 @@ def winoground(benchmark_name, transform=None, **kwargs):
         "llama2_ppi": None,
     },
 )
-def vg_attribution(benchmark_name, transform=None, has_mask=False, **kwargs):
+def vg_attribution(benchmark_name, transform=None, **kwargs):
     benchmark = HuggingFaceDataset(
         transform=transform, dataset_url="haideraltahan/wds_vg_attribution", **kwargs
     )
