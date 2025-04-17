@@ -5,19 +5,25 @@ import open_clip
 from unibench import Evaluator
 from unibench.models_zoo.wrappers.open_clip import OpenClipModel
 import argparse
+import time
 # names cannot contain '-
 
 def main(args):
     benchmarks = [
-        # 'coco_order', 'flickr30k_order', 'sugarcrepe', 'vg_attribution', 'vg_relation', 'winoground', ## relation
+        # 'imagenet1k', 'cifar10', 'cifar100', 'mnist', # obejct recognition
+        'clevr_count_new',
         # 'clevr_count', 'clevr_distance', 
-        'countbench', 
+        # 'coco_order', 'flickr30k_order', 'sugarcrepe', 'vg_attribution', 'vg_relation', 'winoground', ## relation
+        # 'countbench', 
         # 'dmlab', 'dspr_orientation', 'dspr_x_position', 'dspr_y_position', 
         # 'kitti_distance', 
         # 'smallnorb_azimuth', 'smallnorb_elevation', ## reasoning
     ]
 
-    eval = Evaluator(has_mask=args.objects_sense_format is not None)
+    eval = Evaluator(
+        has_mask=args.objects_sense_format is not None,
+        test_mode=args.test_mode
+    )
 
     # update benchmarks
     if benchmarks:
@@ -49,6 +55,10 @@ if __name__ == '__main__':
     parser.add_argument("--objects_sense_format", type=str, default=None, help="Format of objects sense")
     # parser.add_argument("--objects_data", type=str, default=None, help="Path to file(s) with objects data")
     parser.add_argument("--exp_name", type=str, required=True, help="Experiment name")
+    parser.add_argument("--test_mode", type=str, required=False, default=None, help="Experiment name")
     args = parser.parse_args()
+    start_time = time.time()
     main(args)
+    end_time = time.time()
+    print(f"Execution time: {end_time - start_time} seconds")
     

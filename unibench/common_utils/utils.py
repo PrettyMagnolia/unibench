@@ -153,12 +153,20 @@ def load_mask(pkl_file_path, image_shape):
         return np.ones(image_shape[:2], dtype=np.uint8)
 
 
-def load_DINO_mask(edge_path, image_shape):
+def load_DINO_mask(edge_path, image_shape, test_mode=None):
+    if test_mode == '0':
+        print("Using all zeros mask")
+        return np.zeros(image_shape[:2], dtype=np.uint8)
+    elif test_mode == '1':
+        print("Using all ones mask")
+        return np.ones(image_shape[:2], dtype=np.uint8)
+    
     if os.path.exists(edge_path):
         with open(edge_path, 'rb') as f:
             combined_edges = pickle.load(f)
         rle = {'size': combined_edges['size'], 'counts': combined_edges['counts']}
         mask = rle_to_mask(rle)
+        print(f"Mask shape: {mask.shape}")
         return mask
     else:
         return np.ones(image_shape[:2], dtype=np.uint8)
